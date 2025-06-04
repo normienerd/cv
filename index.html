@@ -24,6 +24,7 @@
         .fade-in-delay-2 { animation-delay: 0.4s; }
         .fade-in-delay-3 { animation-delay: 0.6s; }
         .fade-in-delay-4 { animation-delay: 0.8s; }
+        .fade-in-delay-5 { animation-delay: 1.0s; } /* Added for new order */
 
         @keyframes fadeIn {
             to {
@@ -153,6 +154,8 @@
         /* Ensure hero section takes full viewport height minus nav */
         #hero {
             min-height: var(--min-h-screen-minus-nav);
+            position: relative; /* Added for canvas absolute positioning */
+            overflow: hidden; /* Hide overflowing canvas doodles */
         }
 
         /* Timeline Wrapper Styles (common for both experience and academic) */
@@ -171,7 +174,7 @@
             left: 0;
             right: 0;
             height: 2px;
-            background-color: #555555;
+            background-color: rgba(255, 255, 255, 0.5); /* White with 50% opacity */
             transform: translateY(-50%);
             z-index: 0;
         }
@@ -196,7 +199,7 @@
                 left: 1.5rem; /* Position the vertical line */
                 width: 2px;
                 height: 100%;
-                background-color: #555555;
+                background-color: rgba(255, 255, 255, 0.5); /* White with 50% opacity */
                 z-index: 0;
             }
         }
@@ -204,7 +207,7 @@
         /* Common timeline item styles for desktop */
         @media (min-width: 640px) {
             .timeline-item {
-                position: relative; /* Default relative, overridden for #experience */
+                position: relative;
                 z-index: 10;
                 display: flex;
                 flex-direction: column;
@@ -278,8 +281,10 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 180px; /* Adjusted height */
+                height: 150px; /* Adjusted height */
                 gap: 5rem; /* Adjusted gap */
+                padding-top: 20px; /* Reduced padding */
+                padding-bottom: 20px; /* Reduced padding */
             }
             #academic-background .timeline-item {
                 position: relative;
@@ -288,7 +293,7 @@
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
-                width: 250px;
+                width: 300px; /* Increased width to prevent wrapping */
                 height: 100%;
                 justify-content: space-between;
                 padding: 0;
@@ -301,7 +306,7 @@
                 right: 0;
                 padding-bottom: 0.75rem; /* Adjusted padding */
                 display: flex;
-                flex-direction: column;
+                flex-direction: column; /* Default to column for mobile */
                 justify-content: flex-end;
                 height: 50%;
             }
@@ -445,18 +450,19 @@
         </div>
     </nav>
 
-    <section id="hero" class="bg-white text-black py-8 md:py-24 flex items-center justify-center">
-        <div class="max-w-7xl mx-auto px-6 text-center">
+    <section id="hero" class="bg-gray-100 text-black py-8 md:py-24 flex items-center justify-center">
+        <canvas id="doodleCanvas" class="absolute inset-0 w-full h-full z-0"></canvas>
+        <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
             <h1 class="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-3 fade-in">
                 Hi, I'm <span class="text-black">Md. Sahariar Kabir Nion</span>
             </h1>
             <p class="text-lg sm:text-xl md:text-2xl mb-3 fade-in fade-in-delay-1">
                 Currently working as Research Volunteer at ARG/WEFC Nexus Lab
             </p>
-            <p class="text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-12 fade-in fade-in-delay-2">
+            <p class="text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-24 fade-in fade-in-delay-2 opacity-20">
                 Civil Engineer || AMIEB || Environmental Engineering
             </p>
-            <a id="viewMyWorksBtn" href="#research" class="bg-black text-white hover:bg-gray-800 hover:text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 fade-in fade-in-delay-3 mt-6"> View My Works
+            <a id="viewMyWorksBtn" href="#research" class="bg-black text-white hover:bg-gray-800 hover:text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 fade-in fade-in-delay-3 mt-20"> View My Works
             </a>
         </div>
     </section>
@@ -587,16 +593,33 @@
         </div>
     </section>
 
+    <section id="professional-affiliations" class="py-0 md:py-6 bg-black">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-white mb-10 fade-in text-right">Professional Affiliations</h2>
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2 fade-in fade-in-delay-1">
+                <p class="text-xl sm:text-2xl font-semibold text-white text-center sm:text-left">
+                    The Institution of Engineers, Bangladesh (IEB)
+                </p>
+                <div class="flex flex-col items-center sm:items-end">
+                    <p class="text-sm text-gray-400 mb-1">Membership Number</p>
+                    <div class="bg-white text-black py-4 px-8 rounded-lg shadow-lg">
+                        <p class="text-lg font-bold">A-27450</p>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </section>
+
     <section id="academic-background" class="py-6 md:py-12 bg-black">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-4xl font-bold text-white mb-10 fade-in text-right">Academic Background</h2>
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-white mb-10 fade-in">Academic Background</h2>
             <div class="timeline-wrapper flex flex-col sm:flex-row justify-center relative">
                 <div class="timeline-line hidden sm:block"></div>
 
                 <div class="timeline-item fade-in fade-in-delay-1">
                     <div class="timeline-top-content py-2">
                         <h3 class="text-xl font-semibold text-white">Secondary School Certificate</h3>
-                        <p class="text-gray-300">Bright School and College</p>
+                        <p class="text-gray-300 opacity-75">Bright School and College</p>
                     </div>
                     <div class="timeline-marker"></div>
                     <div class="timeline-bottom-content py-2">
@@ -607,7 +630,7 @@
                 <div class="timeline-item fade-in fade-in-delay-2">
                     <div class="timeline-top-content py-2">
                         <h3 class="text-xl font-semibold text-white">Higher Secondary Certificate</h3>
-                        <p class="text-gray-300">Government Science College</p>
+                        <p class="text-gray-300 opacity-75">Government Science College</p>
                     </div>
                     <div class="timeline-marker"></div>
                     <div class="timeline-bottom-content py-2">
@@ -619,12 +642,47 @@
                     <div class="timeline-top-content py-2">
                         <h3 class="text-xl font-semibold text-white">Bachelor of Science</h3>
                         <p class="text-white">Civil Engineering</p>
-                        <p class="text-gray-300">University of Asia Pacific</p>
+                        <p class="text-white opacity-75">University of Asia Pacific</p>
                     </div>
                     <div class="timeline-marker"></div>
                     <div class="timeline-bottom-content py-2">
                         <p class="text-gray-400 text-sm">2019 - 2024</p>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="standardized-test-scores" class="py-6 md:py-12 bg-black">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-white mb-10 fade-in text-left">Standardized Test Scores</h2>
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between fade-in fade-in-delay-1 mb-8">
+                <p class="text-xl sm:text-2xl font-semibold text-white text-left">
+                    IELTS - International English Language Testing System
+                </p>
+                <p class="text-gray-400 italic text-right">February 2025</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div class="bg-black p-4 rounded-lg shadow-lg border border-gray-700 flex flex-col items-center justify-center text-center fade-in fade-in-delay-2">
+                    <p class="text-sm font-semibold text-gray-400 mb-1">Overall Score</p>
+                    <p class="text-3xl font-bold text-white">7.5</p>
+                </div>
+                <div class="bg-black p-4 rounded-lg shadow-lg border border-gray-700 flex flex-col items-center justify-center text-center fade-in fade-in-delay-3">
+                    <p class="text-sm font-semibold text-gray-400 mb-1">Listening Module</p>
+                    <p class="text-3xl font-bold text-white">8.5</p>
+                </div>
+                <div class="bg-black p-4 rounded-lg shadow-lg border border-gray-700 flex flex-col items-center justify-center text-center fade-in fade-in-delay-4">
+                    <p class="text-sm font-semibold text-gray-400 mb-1">Reading Module</p>
+                    <p class="text-3xl font-bold text-white">7.5</p>
+                </div>
+                <div class="bg-black p-4 rounded-lg shadow-lg border border-gray-700 flex flex-col items-center justify-center text-center fade-in fade-in-delay-5">
+                    <p class="text-sm font-semibold text-gray-400 mb-1">Writing Module</p>
+                    <p class="text-3xl font-bold text-white">7</p>
+                </div>
+                <div class="bg-black p-4 rounded-lg shadow-lg border border-gray-700 flex flex-col items-center justify-center text-center fade-in fade-in-delay-6">
+                    <p class="text-sm font-semibold text-gray-400 mb-1">Speaking Module</p>
+                    <p class="text-3xl font-bold text-white">6</p>
                 </div>
             </div>
         </div>
@@ -642,15 +700,59 @@
                     </div>
                 </div>
                 <!-- Undergraduate Thesis Card -->
-                <div class="bg-black rounded-lg shadow-lg overflow-hidden transition duration-300 fade-in fade-in-delay-2 w-full max-w-sm">
+                <div class="bg-black p-4 rounded-lg shadow-lg overflow-hidden transition duration-300 fade-in fade-in-delay-2 w-full max-w-sm">
                     <div class="p-6">
                         <h3 class="text-2xl font-semibold text-white mb-2">Assessment of Risk from The Outfall Discharges into Turag River and The Effects on Its Aquatic Ecosystems</h3>
                         <span class="open-abstract-btn mt-4 text-gray-400 hover:text-white hover:underline font-medium cursor-pointer transition duration-300 ease-in-out"
                             data-abstract-category="Undergraduate Thesis"
                             data-abstract-title="Assessment of Risk from The Outfall Discharges into Turag River and The Effects on Its Aquatic Ecosystems."
-                            data-abstract-content="Turag River is increasingly threatened by the uncontrolled discharge of industrial effluents and municipal wastewater. This ongoing environmental challenge poses significant ecological risks, particularly to the river's diverse and delicate aquatic ecosystem. This study investigates the spatial and temporal variations of key physiochemical parameters and heavy metal concentrations in the Turag River, focusing on the impact of outfall discharges. It aims to assess the overall water quality status, ecological risk, and potential bioaccumulation of heavy metals within the river ecosystem, including their potential pathways to human exposure through the food chain. The study area of the river spanning from Aminbajar to Kamarpara and extending to Kashimpur, to assess pollution sources, including industrial waste and sewage. Water samples were collected from thirteen strategically chosen locations, along with sediment, plant, and fish samples. The study employed standardized sampling and analytical techniques to analyze heavy metal concentrations such as Lead (Pb), Mercury (Hg), Chromium (Cr), Cadmium (Cd), Zinc (Zn), Copper (Cu), Manganese (Mn) and Nickel (Ni) as well as physiochemical parameters for instance pH, salinity, electric conductivity (EC), total dissolved solids (TDS), total suspended solids (TSS), dissolved oxygen (DO), biochemical oxygen demand (BOD5), chemical oxygen demand (COD), total phosphate (PO4-P), total nitrate (NO3-N), total nitrite (NO2-N), ammonium (NH4-N), Ferrous-II, and total kjeldahl nitrogen (TKN), enabling a thorough evaluation of water quality and the ecological health of the river ecosystem. The concentrations were standardized and analyzed using various important indices, including the water quality index (WQI), heavy metal evaluation index (HEI), contamination degree (Cd), potential ecological risk index (PERI), geo-accumulation factor (Igeo), bio-accumulation factor (BAF), biota-sediment accumulation factor (BSAF), estimated daily intake of metals (EDI), target hazard quotient (THQ), hazard index (HI), and carcinogenic risk index (CRI). Additionally, several analytical methods were employed, such as geo-spatial analysis, principal component analysis on total hazard quotient, cluster analysis, and meta-analysis. The study revealed alarmingly high BOD5 levels at Ashulia Kachabajar was 42.18 mg/L, which had far exceeded acceptable limits, indicating severe pollution from industrial and municipal waste. The median COD level at the confluence was 270 mg/L, lower than the outfall's 394 mg/L, but significant variability suggested episodic pollution events. DO levels in industrial areas were critically low as 0.1 mg/L, well below the 5-mg/L threshold for aquatic life, leading to fish absence during dry seasons. Ammonium concentrations downstream were alarmingly high as 49.3 mg/L, significantly exceeding the permissible limit of 0.3 mg/L, primarily due to untreated sewage and agricultural runoff. Residents in the Zirabo-Ashulia Kachabajar area reported kidney diseases, potentially linked to heavy metal contamination, with the HEI value of 236.415 indicating severe contamination levels, which far exceeded the threshold of 20, indicating severe contamination. Pb concentrations in Rustampur’s water reached 1.34 μg/L, significantly exceeding safety standards. Zn levels in water of Rustampur were the highest 2.87 μg/L, while sediment concentrations in Zirabo reached alarming levels 77.8 mg/kg. Negative Igeo values for Cd suggested a lack of cadmium contamination, contrasting with significant concerns for Cu and Cr. BSAF revealed Cd's high mobility from sediment to plants and Cu's high bioaccumulation in fish tissues. The HI analysis indicated a significant non-carcinogenic health risk associated with fish consumption, with all five species exceeding HI values of 1.0, particularly Kabashi Tengra (highest HI). Chromium levels in Tint Puti (CRI 3.59 and 15.8), Kabashi Tengra (CRI 3.70 and 16.3), and other fish species in the Turag River pose a significant health risk, particularly for liver damage and potential cancer development. Cluster analysis identified two distinct groups of heavy metals, with Zn, Cd, and Cu in one group and Mn, Cr, and Pb in another, highlighting cumulative exposure risks linked to nearby textile and dyeing industries, which were corroborated by local reports of increased kidney diseases. The meta-analysis of water and sediment samples revealed a significant correlation among studies, with a common effect model of 1.80 for water and 0.65 for sediment, indicating persistent water quality issues. This study addresses the severe contamination levels and associated health risks necessitating a comprehensive monitoring program, with regular assessments of water and sediment quality, particularly in heavily impacted areas like Zirabo. It further suggests stricter enforcement of industrial discharge regulations is crucial, alongside upgrading wastewater treatment infrastructure and promoting sustainable agricultural practices. Engaging local communities in pollution awareness initiatives will be vital for restoring the river's ecological integrity and safeguarding public health.">
+                            data-abstract-content="Turag River is increasingly threatened by the uncontrolled discharge of industrial effluents and municipal wastewater. This ongoing environmental challenge poses significant ecological risks, particularly to the river's diverse and delicate aquatic ecosystem. This study investigates the spatial and temporal variations of key physiochemical parameters and heavy metal concentrations in the Turag River, focusing on the impact of outfall discharges. It aims to assess the overall water quality status, ecological risk, and potential bioaccumulation of heavy metals within the river ecosystem, including their potential pathways to human exposure through the food chain. The study area of the river spanning from Aminbajar to Kamarpara and extending to Kashimpur, to assess pollution sources, including industrial waste and sewage. Water samples were collected from thirteen strategically chosen locations, along with sediment, plant, and fish samples. The study employed standardized sampling and analytical techniques to analyze heavy metal concentrations such as Lead (Pb), Mercury (Hg), Chromium (Cr), Cadmium (Cd), Zinc (Zn), Copper (Cu), Manganese (Mn) and Nickel (Ni) as well as physiochemical parameters for instance pH, salinity, electric conductivity (EC), total dissolved solids (TDS), total suspended solids (TSS), dissolved oxygen (DO), biochemical oxygen demand (BOD5), chemical oxygen demand (COD), total phosphate (PO4-P), total nitrate (NO3-N), total nitrite (NO2-N), ammonium (NH4-N), Ferrous-II, and total kjeldahl nitrogen (TKN), enabling a thorough evaluation of water quality and the ecological health of the river ecosystem. The concentrations were standardized and analyzed using various important indices, including the water quality index (WQI), heavy metal evaluation index (HEI), contamination degree (Cd), potential ecological risk index (PERI), geo-accumulation factor (Igeo), bio-accumulation factor (BAF), biota-sediment accumulation factor (BSAF), estimated daily intake of metals (EDI), target hazard quotient (THQ), and hazard index (HI), and carcinogenic risk index (CRI). Additionally, several analytical methods were employed, such as geo-spatial analysis, principal component analysis on total hazard quotient, cluster analysis, and meta-analysis. The study revealed alarmingly high BOD5 levels at Ashulia Kachabajar was 42.18 mg/L, which had far exceeded acceptable limits, indicating severe pollution from industrial and municipal waste. The median COD level at the confluence was 270 mg/L, lower than the outfall's 394 mg/L, but significant variability suggested episodic pollution events. DO levels in industrial areas were critically low as 0.1 mg/L, well below the 5-mg-L threshold for aquatic life, leading to fish absence during dry seasons. Ammonium concentrations downstream were alarmingly high as 49.3 mg/L, significantly exceeding the permissible limit of 0.3 mg/L, primarily due to untreated sewage and agricultural runoff. Residents in the Zirabo-Ashulia Kachabajar area reported kidney diseases, potentially linked to heavy metal contamination, with the HEI value of 236.415 indicating severe contamination levels, which far exceeded the threshold of 20, indicating severe contamination. Pb concentrations in Rustampur’s water reached 1.34 μg/L, significantly exceeding safety standards. Zn levels in water of Rustampur were the highest 2.87 μg/L, while sediment concentrations in Zirabo reached alarming levels 77.8 mg/kg. Negative Igeo values for Cd suggested a lack of cadmium contamination, contrasting with significant concerns for Cu and Cr. BSAF revealed Cd's high mobility from sediment to plants and Cu's high bioaccumulation in fish tissues. The HI analysis indicated a significant non-carcinogenic health risk associated with fish consumption, with all five species exceeding HI values of 1.0, particularly Kabashi Tengra (highest HI). Chromium levels in Tint Puti (CRI 3.59 and 15.8), Kabashi Tengra (CRI 3.70 and 16.3), and other fish species in the Turag River pose a significant health risk, particularly for liver damage and potential cancer development. Cluster analysis identified two distinct groups of heavy metals, with Zn, Cd, and Cu in one group and Mn, Cr, and Pb in another, highlighting cumulative exposure risks linked to nearby textile and dyeing industries, which were corroborated by local reports of increased kidney diseases. The meta-analysis of water and sediment samples revealed a significant correlation among studies, with a common effect model of 1.80 for water and 0.65 for sediment, indicating persistent water quality issues. This study addresses the severe contamination levels and associated health risks necessitating a comprehensive monitoring program, with regular assessments of water and sediment quality, particularly in heavily impacted areas like Zirabo. It further suggests stricter enforcement of industrial discharge regulations is crucial, alongside upgrading wastewater treatment infrastructure and promoting sustainable agricultural practices. Engaging local communities in pollution awareness initiatives will be vital for restoring the river's ecological integrity and safeguarding public health.">
                             Abstract
                         </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="other-achievements" class="py-6 md:py-12 bg-black">
+        <div class="max-w-7xl mx-auto px-6 text-right">
+            <h2 class="text-4xl font-bold text-white mb-10 fade-in">Other Notable Activities</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Left Column -->
+                <div class="flex flex-col items-end text-right">
+                    <div class="fade-in fade-in-delay-1">
+                        <p class="text-xl text-white mb-2">
+                            <span>Vice Chancellor’s List of Meritorious Students</span><br>
+                            <span class="text-base opacity-75">for Fall 2020 at University of Asia Pacific</span>
+                        </p>
+                    </div>
+                    <div class="fade-in fade-in-delay-2">
+                        <p class="text-xl text-white mb-2">
+                            <span>Dean’s List of Meritorious Students</span><br>
+                            <span class="text-base opacity-75">for Spring 2021 at University of Asia Pacific</span>
+                        </p>
+                    </div>
+                </div>
+                <!-- Right Column -->
+                <div class="flex flex-col items-end text-right">
+                    <div class="fade-in fade-in-delay-3">
+                        <p class="text-xl text-white mb-2">
+                            <span>President</span><br>
+                            <span class="text-base opacity-75">Structural Engineering Club</span>
+                        </p>
+                    </div>
+                    <div class="fade-in fade-in-delay-4">
+                        <p class="text-xl text-white mb-2">
+                            <span>Student Member</span><br>
+                            <span class="text-base opacity-75">American Concrete Institute (ACI)</span>
+                        </p>
+                    </div>
+                    <div class="fade-in fade-in-delay-5">
+                        <p class="text-xl text-white mb-2">
+                            <span>General Member</span><br>
+                            <span class="text-base opacity-75">Government Science College Science Club</span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -694,9 +796,15 @@
         </div>
     </section>
 
-    <footer class="bg-white text-black py-6">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>Thank you!</p>
+    <footer class="bg-white text-black py-4">
+        <div class="max-w-xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between">
+            <p class="text-black text-lg font-semibold mb-4 sm:mb-0">Thank you!</p>
+            <!-- Signature Image and Full Name -->
+            <div class="flex flex-col items-center text-center">
+                <!-- Changed placeholder image background to transparent (or white to match footer) -->
+                <img src="https://github.com/normienerd/cv/blob/main/sign.png" alt="Signature Placeholder" class="mb-2">
+                <p class="text-black text-lg font-semibold">Md. Sahariar Kabir Nion</p>
+            </div>
         </div>
     </footer>
 
@@ -969,6 +1077,90 @@
         goToTopButton.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+
+        // --- Doodle Background Animation Logic ---
+        const doodleCanvas = document.getElementById('doodleCanvas');
+        const doodleCtx = doodleCanvas.getContext('2d');
+        const heroSection = document.getElementById('hero');
+
+        let circles = [];
+        const maxCircles = 15; // Number of circles to maintain
+        const minRadius = 10;
+        const maxRadius = 200;
+        const speed = 0.5; // How fast circles expand
+        const spawnInterval = 1000; // Milliseconds between new circle spawns
+        let lastSpawnTime = 0;
+
+        function resizeDoodleCanvas() {
+            doodleCanvas.width = heroSection.offsetWidth;
+            doodleCanvas.height = heroSection.offsetHeight;
+        }
+
+        class Circle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = minRadius;
+                this.opacity = 0.6; // Start with some opacity
+                this.lineWidth = 1.5;
+            }
+
+            update() {
+                this.radius += speed;
+                this.opacity -= 0.003; // Fade out slowly
+            }
+
+            draw() {
+                doodleCtx.beginPath();
+                doodleCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                doodleCtx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`; // White lines
+                doodleCtx.lineWidth = this.lineWidth;
+                doodleCtx.stroke();
+            }
+        }
+
+        function spawnCircle() {
+            const x = Math.random() * doodleCanvas.width;
+            const y = Math.random() * doodleCanvas.height;
+            circles.push(new Circle(x, y));
+        }
+
+        function animateDoodles(currentTime) {
+            requestAnimationFrame(animateDoodles);
+
+            doodleCtx.clearRect(0, 0, doodleCanvas.width, doodleCanvas.height);
+
+            // Remove old circles and update/draw existing ones
+            circles = circles.filter(circle => {
+                circle.update();
+                if (circle.opacity > 0 && circle.radius < maxRadius) {
+                    circle.draw();
+                    return true; // Keep circle
+                }
+                return false; // Remove circle
+            });
+
+            // Spawn new circles if needed
+            if (circles.length < maxCircles && (currentTime - lastSpawnTime > spawnInterval)) {
+                spawnCircle();
+                lastSpawnTime = currentTime;
+            }
+        }
+
+        // Initialize and start animation
+        window.addEventListener('load', () => {
+            resizeDoodleCanvas();
+            // Spawn initial circles to fill the background
+            for (let i = 0; i < maxCircles; i++) {
+                spawnCircle();
+                // Give them varied starting sizes/opacities for a more natural look
+                circles[i].radius = Math.random() * maxRadius * 0.8;
+                circles[i].opacity = Math.random() * 0.5 + 0.1;
+            }
+            animateDoodles(0); // Start the animation loop
+        });
+
+        window.addEventListener('resize', resizeDoodleCanvas);
     </script>
 </body>
 </html>
