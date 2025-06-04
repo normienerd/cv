@@ -1,4 +1,4 @@
-<!DOCTYPE file html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -91,7 +91,7 @@
             margin: auto;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4一層px 6px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
             width: 90%;
             max-width: 700px;
             position: relative;
@@ -154,8 +154,18 @@
         /* Ensure hero section takes full viewport height minus nav */
         #hero {
             min-height: var(--min-h-screen-minus-nav);
-            position: relative; /* Added for canvas absolute positioning */
-            overflow: hidden; /* Hide overflowing canvas doodles */
+            position: relative; /* Needed for absolute positioning of canvas */
+            overflow: hidden; /* Hide overflowing lines */
+        }
+
+        /* Canvas for snake animation */
+        #snakeCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Behind other content */
         }
 
         /* Timeline Wrapper Styles (common for both experience and academic) */
@@ -451,7 +461,8 @@
     </nav>
 
     <section id="hero" class="bg-gray-100 text-black py-8 md:py-24 flex items-center justify-center">
-        <canvas id="doodleCanvas" class="absolute inset-0 w-full h-full z-0"></canvas>
+        <!-- Canvas for the snake-like animation -->
+        <canvas id="snakeCanvas"></canvas>
         <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
             <h1 class="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-3 fade-in">
                 Hi, I'm <span class="text-black">Md. Sahariar Kabir Nion</span>
@@ -459,7 +470,8 @@
             <p class="text-lg sm:text-xl md:text-2xl mb-3 fade-in fade-in-delay-1">
                 Currently working as Research Volunteer at ARG/WEFC Nexus Lab
             </p>
-            <p class="text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-24 fade-in fade-in-delay-2 opacity-20">
+            <!-- Changed text-opacity-20 to text-opacity-40 -->
+            <p class="text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-32 fade-in fade-in-delay-2 text-black text-opacity-40">
                 Civil Engineer || AMIEB || Environmental Engineering
             </p>
             <a id="viewMyWorksBtn" href="#research" class="bg-black text-white hover:bg-gray-800 hover:text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 fade-in fade-in-delay-3 mt-20"> View My Works
@@ -693,14 +705,14 @@
             <h2 class="text-4xl font-bold text-white mb-10 fade-in">My Research</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center">
                 <!-- Journal Article Card - Moved before Undergraduate Thesis Card -->
-                <div class="bg-black rounded-lg shadow-lg overflow-hidden transition duration-300 fade-in fade-in-delay-1 w-full max-w-sm">
+                <div class="bg-black rounded-lg shadow-lg overflow-hidden transition duration-300 fade-in fade-in-delay-1 w-full max-w-sm border border-gray-700">
                     <div class="p-6">
                         <h3 class="text-2xl font-semibold text-white mb-2">Work in progress...</h3>
                         <p class="text-gray-300 mb-4"></p>
                     </div>
                 </div>
                 <!-- Undergraduate Thesis Card -->
-                <div class="bg-black p-4 rounded-lg shadow-lg overflow-hidden transition duration-300 fade-in fade-in-delay-2 w-full max-w-sm">
+                <div class="bg-black p-4 rounded-lg shadow-lg overflow-hidden transition duration-300 fade-in fade-in-delay-2 w-full max-w-sm border border-gray-700">
                     <div class="p-6">
                         <h3 class="text-2xl font-semibold text-white mb-2">Assessment of Risk from The Outfall Discharges into Turag River and The Effects on Its Aquatic Ecosystems</h3>
                         <span class="open-abstract-btn mt-4 text-gray-400 hover:text-white hover:underline font-medium cursor-pointer transition duration-300 ease-in-out"
@@ -801,7 +813,6 @@
             <p class="text-black text-lg font-semibold mb-4 sm:mb-0">Thank you!</p>
             <!-- Signature Image and Full Name -->
             <div class="flex flex-col items-center text-center">
-                <!-- Changed placeholder image background to transparent (or white to match footer) -->
                 <img src="sign.png" alt="Signature Placeholder" class="mb-2">
                 <p class="text-black text-lg font-semibold">Md. Sahariar Kabir Nion</p>
             </div>
@@ -1078,89 +1089,138 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // --- Doodle Background Animation Logic ---
-        const doodleCanvas = document.getElementById('doodleCanvas');
-        const doodleCtx = doodleCanvas.getContext('2d');
-        const heroSection = document.getElementById('hero');
+        // --- Snake-like Line Animation for Hero Section ---
+        let canvas, ctx, lines;
+        const NUM_LINES = 40; // Increased number of snake-like lines
+        const LINE_WIDTH = 2; // Thickness of the lines
+        const LINE_COLOR = 'rgba(0, 0, 0, 0.1)'; // Black with 10% opacity
+        const MAX_LENGTH = 50; // Max number of points in a snake line
 
-        let circles = [];
-        const maxCircles = 15; // Number of circles to maintain
-        const minRadius = 10;
-        const maxRadius = 200;
-        const speed = 0.5; // How fast circles expand
-        const spawnInterval = 1000; // Milliseconds between new circle spawns
-        let lastSpawnTime = 0;
+        // SnakeLine class to manage individual lines
+        class SnakeLine {
+            constructor(canvasWidth, canvasHeight) {
+                this.canvasWidth = canvasWidth;
+                this.canvasHeight = canvasHeight;
+                this.points = [];
+                this.maxLength = Math.floor(Math.random() * (MAX_LENGTH - 20) + 20); // Random length
+                this.speed = Math.random() * 1 + 1; // Random speed between 1 and 2
+                this.color = LINE_COLOR;
+                this.lineWidth = LINE_WIDTH;
+                this.init();
+            }
 
-        function resizeDoodleCanvas() {
-            doodleCanvas.width = heroSection.offsetWidth;
-            doodleCanvas.height = heroSection.offsetHeight;
-        }
+            init() {
+                // Random starting position within canvas bounds
+                this.headX = Math.random() * this.canvasWidth;
+                this.headY = Math.random() * this.canvasHeight;
 
-        class Circle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.radius = minRadius;
-                this.opacity = 0.6; // Start with some opacity
-                this.lineWidth = 1.5;
+                // Random initial velocity
+                this.vx = (Math.random() - 0.5) * 2 * this.speed;
+                this.vy = (Math.random() - 0.5) * 2 * this.speed;
+
+                // Ensure initial velocity is not too small
+                if (Math.abs(this.vx) < 0.5 && Math.abs(this.vy) < 0.5) {
+                    this.vx = this.speed;
+                    this.vy = this.speed;
+                }
+
+                this.points = [{ x: this.headX, y: this.headY }];
+                // Pre-populate with a few points to make it visible initially
+                for (let i = 0; i < this.maxLength / 2; i++) {
+                    this.points.unshift({ x: this.headX - this.vx * i, y: this.headY - this.vy * i });
+                }
             }
 
             update() {
-                this.radius += speed;
-                this.opacity -= 0.003; // Fade out slowly
-            }
+                // Update head position
+                this.headX += this.vx;
+                this.headY += this.vy;
 
-            draw() {
-                doodleCtx.beginPath();
-                doodleCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                doodleCtx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`; // White lines
-                doodleCtx.lineWidth = this.lineWidth;
-                doodleCtx.stroke();
-            }
-        }
+                // Add new head point
+                this.points.push({ x: this.headX, y: this.headY });
 
-        function spawnCircle() {
-            const x = Math.random() * doodleCanvas.width;
-            const y = Math.random() * doodleCanvas.height;
-            circles.push(new Circle(x, y));
-        }
-
-        function animateDoodles(currentTime) {
-            requestAnimationFrame(animateDoodles);
-
-            doodleCtx.clearRect(0, 0, doodleCanvas.width, doodleCanvas.height);
-
-            // Remove old circles and update/draw existing ones
-            circles = circles.filter(circle => {
-                circle.update();
-                if (circle.opacity > 0 && circle.radius < maxRadius) {
-                    circle.draw();
-                    return true; // Keep circle
+                // Remove oldest point if line exceeds max length
+                if (this.points.length > this.maxLength) {
+                    this.points.shift();
                 }
-                return false; // Remove circle
+
+                // Boundary collision detection and reflection
+                const padding = 5; // Small padding to prevent lines from sticking to edges
+                if (this.headX < padding || this.headX > this.canvasWidth - padding) {
+                    this.vx *= -1; // Reverse X velocity
+                    this.headX = Math.max(padding, Math.min(this.headX, this.canvasWidth - padding)); // Keep within bounds
+                    // Add a slight random perturbation to avoid predictable bounces
+                    this.vy += (Math.random() - 0.5) * 0.5;
+                }
+                if (this.headY < padding || this.headY > this.canvasHeight - padding) {
+                    this.vy *= -1; // Reverse Y velocity
+                    this.headY = Math.max(padding, Math.min(this.headY, this.canvasHeight - padding)); // Keep within bounds
+                    // Add a slight random perturbation
+                    this.vx += (Math.random() - 0.5) * 0.5;
+                }
+            }
+
+            draw(ctx) {
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = this.lineWidth;
+                ctx.lineCap = 'round'; // Make line ends rounded
+
+                if (this.points.length < 2) return; // Need at least two points to draw a line
+
+                ctx.beginPath();
+                ctx.moveTo(this.points[0].x, this.points[0].y);
+                for (let i = 1; i < this.points.length; i++) {
+                    ctx.lineTo(this.points[i].x, this.points[i].y);
+                }
+                ctx.stroke();
+            }
+        }
+
+        function initSnakeCanvas() {
+            canvas = document.getElementById('snakeCanvas');
+            const heroSection = document.getElementById('hero');
+            if (!canvas || !heroSection) {
+                console.error("Canvas or hero section not found.");
+                return;
+            }
+
+            // Set canvas dimensions to match hero section
+            canvas.width = heroSection.offsetWidth;
+            canvas.height = heroSection.offsetHeight;
+            ctx = canvas.getContext('2d');
+
+            lines = [];
+            for (let i = 0; i < NUM_LINES; i++) {
+                lines.push(new SnakeLine(canvas.width, canvas.height));
+            }
+        }
+
+        function animateSnakeLines() {
+            if (!ctx || !canvas) return;
+
+            // Clear canvas for next frame
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update and draw each line
+            lines.forEach(line => {
+                line.update();
+                line.draw(ctx);
             });
 
-            // Spawn new circles if needed
-            if (circles.length < maxCircles && (currentTime - lastSpawnTime > spawnInterval)) {
-                spawnCircle();
-                lastSpawnTime = currentTime;
-            }
+            requestAnimationFrame(animateSnakeLines);
         }
 
-        // Initialize and start animation
-        window.addEventListener('load', () => {
-            resizeDoodleCanvas();
-            // Spawn initial circles to fill the background
-            for (let i = 0; i < maxCircles; i++) {
-                spawnCircle();
-                // Give them varied starting sizes/opacities for a more natural look
-                circles[i].radius = Math.random() * maxRadius * 0.8;
-                circles[i].opacity = Math.random() * 0.5 + 0.1;
-            }
-            animateDoodles(0); // Start the animation loop
-        });
+        // Initialize and start animation when window loads
+        window.onload = function() {
+            initSnakeCanvas();
+            animateSnakeLines();
+        };
 
-        window.addEventListener('resize', resizeDoodleCanvas);
+        // Handle canvas resizing on window resize
+        window.addEventListener('resize', () => {
+            // Re-initialize canvas and lines to adapt to new size
+            initSnakeCanvas();
+        });
     </script>
 </body>
 </html>
