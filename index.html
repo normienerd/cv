@@ -712,7 +712,12 @@
                 <div class="bg-black rounded-lg shadow-lg overflow-hidden transition duration-300 fade-in fade-in-delay-1 w-full max-w-sm border border-gray-700">
                     <div class="p-6">
                         <h3 class="text-2xl font-semibold text-white mb-2">Work in progress...</h3>
-                        <p class="text-gray-300 mb-4"></p>
+                        <span class="open-abstract-btn mt-4 text-gray-400 hover:text-white hover:underline font-medium cursor-pointer transition duration-300 ease-in-out"
+                            data-abstract-category="Research"
+                            data-abstract-title="Work in progress..."
+                            data-abstract-content="Currently working on several projects. Details to be added soon. Thanks.">
+                            Details
+                        </span>
                     </div>
                 </div>
                 <!-- New Research Card -->
@@ -1023,13 +1028,13 @@
                         break;
                     case 'Team Leadership':
                         organizations.push('Structural Engineering Club');
-                        organizations.push('Total Barakah Housing Bangladesh Ltd.');
-                        break;
+                        break; // Removed Total Barakah Housing Bangladesh Ltd.
                     case 'Event Organizing':
                         organizations.push('Structural Engineering Club');
                         break;
                     case 'Manpower Management':
                         organizations.push('Structural Engineering Club');
+                        organizations.push('Total Barakah Housing Bangladesh Ltd.'); // Added Total Barakah Housing Bangladesh Ltd.
                         break;
                     case 'AI Practitioner':
                         break;
