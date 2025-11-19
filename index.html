@@ -4,1247 +4,1197 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nion's Profile</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%' y='90%' font-anchor='middle' fill='%23000'%3EN%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='90%25' font-anchor='middle' fill='%232563eb' font-family='serif'%3EN%3C/text%3E%3C/svg%3E" type="image/svg+xml">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Custom styles for animations and font */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #000000; /* Pure black background */
-            color: #ffffff; /* Pure white text */
-            /* Added padding-top to body to account for fixed navbar height */
-            padding-top: 72px; /* Default value, will be updated by JS */
-        }
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 1s ease-out forwards;
-        }
-        .fade-in-delay-1 { animation-delay: 0.2s; }
-        .fade-in-delay-2 { animation-delay: 0.4s; }
-        .fade-in-delay-3 { animation-delay: 0.6s; }
-        .fade-in-delay-4 { animation-delay: 0.8s; }
-        .fade-in-delay-5 { animation-delay: 1.0s; } /* Added for new order */
-        .fade-in-delay-6 { animation-delay: 1.2s; } /* Added for new order */
+    
+    <!-- Google Fonts (Montserrat & Playfair Display) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        slate: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            600: '#475569',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        blue: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                        },
+                        teal: {
+                            600: '#0d9488',
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        // Kept pulse animation for present jobs
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
             }
         }
+    </script>
 
-        /* Removed hover-scale-shadow from skill cards directly, now applying text shadow */
-        .skill-card h3 {
-            transition: text-shadow 0.3s ease-in-out; /* Smooth transition for text shadow */
-        }
+    <style>
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(241, 245, 249, 0.5); }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        .skill-card:hover h3 {
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.7); /* White text shadow on hover */
+        /* Glassmorphism Utilities */
+        .glass-sidebar {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            border-right: none;
         }
-
-        /* Smooth scroll for navigation */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Custom scrollbar for aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #111111; /* Darker track */
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #555555; /* Darker thumb */
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #777777; /* Lighter thumb on hover */
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
 
-        /* Modal styles */
-        .modal {
-            position: fixed; /* Stay in place */
-            z-index: 100; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.8); /* More opaque black for dark theme */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0; /* Start hidden for transition */
-            visibility: hidden; /* Hide from screen readers until visible */
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-        }
-
-        .modal.open {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background-color: #1a1a1a; /* Darker background for modal */
-            margin: auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
-            width: 90%;
-            max-width: 700px;
-            position: relative;
-            color: #ffffff; /* White text for modal content */
-        }
-
-        .close-button {
-            color: #cccccc; /* Light gray for close button */
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: white; /* White on hover */
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* Scroll progress bar styles */
-        #scroll-progress-container {
-            width: 100px; /* Fixed width for the container */
-            height: 8px; /* Height of the bar */
-            background-color: #333333; /* Darker background for progress bar track */
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        #scroll-progress-bar {
-            height: 100%;
-            width: 0%;
-            background-color: #ffffff; /* White progress color */
-            border-radius: 4px;
-            transition: width 0.3s ease-out; /* Smooth transition for width change */
-        }
-
-        /* Go to Top Button styles (matches scroll bar container dimensions) */
-        #go-to-top-button {
-            display: none; /* Hidden by default, controlled by JS */
-            background-color: #ffffff; /* White for button */
-            width: 100px; /* Match scroll-progress-container width */
-            height: 8px; /* Match scroll-progress-container height */
-            border-radius: 4px; /* Match scroll-progress-container border-radius */
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            padding: 0; /* Remove any default padding */
-            border: none; /* Remove any default border */
-        }
-
-        #go-to-top-button:hover {
-            background-color: #cccccc; /* Slightly darker white on hover */
-            transform: translateY(-2px);
-        }
-
-        /* Ensure hero section takes full viewport height minus nav */
-        #hero {
-            min-height: var(--min-h-screen-minus-nav);
-            position: relative; /* Needed for absolute positioning of canvas */
-            overflow: hidden; /* Hide overflowing lines */
-        }
-
-        /* Canvas for snake animation */
-        #snakeCanvas {
-            position: absolute;
+        /* Canvas positioning */
+        canvas#bgCanvas {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0; /* Behind other content */
-        }
-
-        /* Timeline Wrapper Styles (common for both experience and academic) */
-        .timeline-wrapper {
-            position: relative;
-            padding-top: 30px; /* Space for content above the line */
-            padding-bottom: 30px; /* Space for content below the line */
-            min-height: 180px; /* Ensure enough height for content */
-            /* justify-content will be set per section */
-        }
-
-        /* Horizontal line for desktop (common) */
-        .timeline-line {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: rgba(255, 255, 255, 0.5); /* White with 50% opacity */
-            transform: translateY(-50%);
             z-index: 0;
+            pointer-events: none;
         }
 
-        /* Vertical line for mobile (common) */
-        @media (max-width: 639px) { /* Tailwind's 'sm' breakpoint is 640px, so this targets smaller */
-            .timeline-wrapper {
-                padding-top: 0;
-                padding-bottom: 0;
-                padding-left: 2rem; /* Space for the vertical line */
-                min-height: auto; /* Revert for mobile */
-                flex-direction: column; /* Stack items vertically on mobile */
-                align-items: flex-start; /* Align to start for vertical flow */
-            }
-            .timeline-line { /* Hide horizontal line on mobile */
-                display: none;
-            }
-            .timeline-wrapper::before { /* Vertical line for mobile */
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 1.5rem; /* Position the vertical line */
-                width: 2px;
-                height: 100%;
-                background-color: rgba(255, 255, 255, 0.5); /* White with 50% opacity */
-                z-index: 0;
-            }
+        /* Navigation Active State */
+        .nav-item.active {
+            background: rgba(37, 99, 235, 0.1); /* Blue-600 with opacity */
+            color: #2563eb; /* Blue-600 */
+            border-right: 3px solid #2563eb;
+        }
+        
+        /* Hide scrollbar for mobile nav */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        /* Common timeline item styles for desktop */
-        @media (min-width: 640px) {
-            .timeline-item {
-                position: relative;
-                z-index: 10;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                box-sizing: border-box;
-                min-height: 180px; /* Adjusted height */
-                justify-content: space-between;
-                padding-top: 30px; /* Adjusted padding */
-                padding-bottom: 30px; /* Adjusted padding */
-                flex-shrink: 0;
-                flex-grow: 0;
-                /* No default width here, will be set per section */
-            }
-
-            /* Specific styles for Professional Experience timeline */
-            #experience .timeline-wrapper {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                height: 180px; /* Adjusted height */
-                padding-left: 5%;
-                padding-right: 5%;
-            }
-            #experience .timeline-item {
-                position: relative;
-                z-index: 10;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                width: 200px;
-                height: 100%;
-                justify-content: space-between;
-                padding: 0;
-            }
-
-            #experience .timeline-top-content {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                padding-bottom: 0.75rem; /* Adjusted padding */
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-end;
-                height: 50%;
-            }
-
-            #experience .timeline-bottom-content {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                padding-top: 0.75rem; /* Adjusted padding */
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                height: 50%;
-            }
-            /* Ensure the text within top/bottom content is centered */
-            #experience .timeline-top-content h3,
-            #experience .timeline-top-content p,
-            #experience .timeline-bottom-content p {
-                text-align: center;
-                width: 100%;
-            }
-
-            /* Academic Background specific desktop styles */
-            #academic-background .timeline-wrapper {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 150px; /* Adjusted height */
-                gap: 5rem; /* Adjusted gap */
-                padding-top: 20px; /* Reduced padding */
-                padding-bottom: 20px; /* Reduced padding */
-            }
-            #academic-background .timeline-item {
-                position: relative;
-                z-index: 10;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                width: 300px; /* Increased width to prevent wrapping */
-                height: 100%;
-                justify-content: space-between;
-                padding: 0;
-            }
-
-            #academic-background .timeline-top-content {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                padding-bottom: 0.75rem; /* Adjusted padding */
-                display: flex;
-                flex-direction: column; /* Default to column for mobile */
-                justify-content: flex-end;
-                height: 50%;
-            }
-
-            #academic-background .timeline-bottom-content {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                padding-top: 0.75rem; /* Adjusted padding */
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                height: 50%;
-            }
-            /* Ensure the text within top/bottom content is centered */
-            #academic-background .timeline-top-content h3,
-            #academic-background .timeline-top-content p,
-            #academic-background .timeline-bottom-content p {
-                text-align: center;
-                width: 100%;
+        /* Fixed social bar position */
+        .fixed-social-bar {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        @media (max-width: 767px) {
+            .fixed-social-bar {
+                top: 0.5rem;
+                right: 0.5rem;
+                padding: 0.5rem;
+                background: transparent;
+                backdrop-filter: none;
+                box-shadow: none;
+                border-bottom: none;
             }
         }
 
-        /* Common timeline marker styles (circles for professional, ticks for academic) */
-        .timeline-marker {
-            position: absolute;
-            width: 1.5rem;
-            height: 1.5rem;
-            background-color: #ffffff;
-            border: 4px solid #000000;
-            border-radius: 9999px;
+        /* Stylized Image Holder for Home Section */
+        .portrait-frame {
+            position: relative;
+            width: 8rem; /* w-32 */
+            height: 10rem; /* h-40 */
+            border-radius: 0.75rem; /* rounded-xl */
+            border: 2px solid #0d94884d; /* border-teal-600/30 */
+            box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.1); /* shadow-teal-600/10 */
+            background-color: #f1f5f9; /* bg-slate-100 */
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
         }
-
-        /* Tick marker for Academic Background */
-        #academic-background .timeline-marker { /* Removed .tick-marker class, applying directly to all markers in academic background */
-            width: 2px;
-            height: 1rem;
-            background-color: #ffffff;
-            border-radius: 0;
-            border: none;
-        }
-
-        /* Mobile specific styles for timeline items */
-        @media (max-width: 639px) {
-            .timeline-wrapper {
-                justify-content: flex-start;
-                gap: 0;
-            }
-            .timeline-top-content,
-            .timeline-bottom-content {
-                width: auto;
-                margin-left: 0.5rem;
-                text-align: left;
-                transform: none;
-                padding-top: 0.5rem; /* Added vertical padding for mobile */
-                padding-bottom: 0.5rem; /* Added vertical padding for mobile */
-            }
-            .timeline-marker {
-                position: relative;
-                top: auto;
-                left: 1rem;
-                transform: none;
-                margin-right: 1rem;
-                flex-shrink: 0;
-            }
-            /* Specific mobile adjustments for #experience, overriding desktop absolute positioning */
-            #experience .timeline-wrapper {
-                display: flex;
-                flex-direction: column;
-                height: auto;
-            }
-            #experience .timeline-item {
-                width: 100%;
-                flex-direction: row;
-                align-items: flex-start;
-                text-align: left;
-                margin-bottom: 1rem; /* Reduced margin for Professional Experience */
-                padding: 0;
-                position: relative;
-                left: auto; top: auto; bottom: auto; transform: none;
-                min-height: auto;
-                margin-left: 0 !important;
-            }
-            #academic-background .timeline-item {
-                width: 100%;
-                flex-direction: row;
-                align-items: flex-start;
-                text-align: left;
-                margin-bottom: 5rem; /* Increased margin for Academic Background */
-                padding: 0;
-                position: relative;
-                left: auto; top: auto; bottom: auto; transform: none;
-                min-height: auto;
-                margin-left: 0 !important;
-            }
-        }
-
-        /* Custom grid-cols-5 for lg breakpoint and above */
-        @media (min-width: 1024px) {
-            .lg\:grid-cols-5 {
-                grid-template-columns: repeat(5, minmax(0, 1fr));
-            }
-        }
-
-        /* Fixed width for clock time to prevent shifting */
-        #clock-time {
-            min-width: 160px; /* Adjust this value as needed to fit "00:00:00" perfectly */
+        .portrait-frame img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-600 antialiased overflow-hidden h-screen flex flex-col md:flex-row selection:bg-blue-500 selection:text-white font-sans">
 
-    <nav class="bg-black shadow-xl py-4 fixed w-full z-10 top-0">
-        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
-            <div class="flex space-x-4">
-                <a href="https://www.instagram.com/sknionn" target="_blank" class="text-gray-400 hover:text-white transition duration-300 text-2xl" aria-label="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://www.linkedin.com/in/sknion" target="_blank" class="text-gray-400 hover:text-white transition duration-300 text-2xl" aria-label="LinkedIn">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-                <a href="https://www.facebook.com/sknionn" target="_blank" class="text-gray-400 hover:text-white transition duration-300 text-2xl" aria-label="Facebook">
-                    <i class="fab fa-facebook"></i>
-                </a>
-            </div>
+    <!-- BACKGROUND ANIMATION -->
+    <canvas id="bgCanvas"></canvas>
 
-            <div class="flex items-center space-x-4">
-                <div id="scroll-progress-container" style="display: block;">
-                    <div id="scroll-progress-bar"></div>
-                </div>
-                <button id="go-to-top-button" style="display: none;"></button>
-            </div>
-        </div>
-    </nav>
+    <!-- SIDEBAR (Desktop: Left, Mobile: Bottom) -->
+    <aside class="hidden md:flex flex-col w-72 h-full glass-sidebar z-20 flex-shrink-0 relative">
+        
+        <nav class="flex-1 py-6 flex flex-col gap-1 overflow-y-auto custom-scroll">
+            <button onclick="switchTab('home')" class="nav-item w-full text-left px-8 py-4 hover:bg-slate-100 transition-all flex items-center gap-4 active text-slate-700 font-medium" id="nav-home">
+                 Home
+            </button>
+            <button onclick="switchTab('about')" class="nav-item w-full text-left px-8 py-4 hover:bg-slate-100 transition-all flex items-center gap-4 text-slate-700 font-medium" id="nav-about">
+                 About
+            </button>
+            <button onclick="switchTab('skills')" class="nav-item w-full text-left px-8 py-4 hover:bg-slate-100 transition-all flex items-center gap-4 text-slate-700 font-medium" id="nav-skills">
+                 Expertise
+            </button>
+            <button onclick="switchTab('experience')" class="nav-item w-full text-left px-8 py-4 hover:bg-slate-100 transition-all flex items-center gap-4 text-slate-700 font-medium" id="nav-experience">
+                 Experience
+            </button>
+            <button onclick="switchTab('education')" class="nav-item w-full text-left px-8 py-4 hover:bg-slate-100 transition-all flex items-center gap-4 text-slate-700 font-medium" id="nav-education">
+                 Education
+            </button>
+            <button onclick="switchTab('research')" class="nav-item w-full text-left px-8 py-4 hover:bg-slate-100 transition-all flex items-center gap-4 text-slate-700 font-medium" id="nav-research">
+                 Research
+            </button>
+            <!-- UPDATED: Renamed to Presentation -->
+            <button onclick="switchTab('presentations')" class="nav-item w-full text-left px-8 py-4 hover:bg-slate-100 transition-all flex items-center gap-4 text-slate-700 font-medium" id="nav-presentations">
+                 Presentation
+            </button>
+            <button onclick="switchTab('affiliations')" class="nav-item w-full text-left px-8 py-4 hover:bg-slate-100 transition-all flex items-center gap-4 text-slate-700 font-medium" id="nav-affiliations">
+                 Membership
+            </button>
+            <button onclick="switchTab('contact')" class="nav-item w-full text-left px-8 py-4 hover:bg-slate-100 transition-all flex items-center gap-4 text-slate-700 font-medium" id="nav-contact">
+                 Contact
+            </button>
+        </nav>
+    </aside>
 
-    <section id="hero" class="bg-gray-100 text-black py-8 md:py-24 flex items-center justify-center">
-        <!-- Canvas for the snake-like animation -->
-        <canvas id="snakeCanvas"></canvas>
-        <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
-            <h1 class="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-3 fade-in">
-                Hi, I'm <span class="text-black">Md. Sahariar Kabir Nion</span>
-            </h1>
-            <p class="text-lg sm:text-xl md:text-2xl mb-3 fade-in fade-in-delay-1">
-                Currently working as Research Assistant at ARG/WEFC Nexus Lab
-            </p>
-            <!-- Changed text-opacity-20 to text-opacity-40 -->
-            <p class="text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-32 fade-in fade-in-delay-2 text-black text-opacity-40">
-                Civil Engineer || AMIEB || Environmental Engineering
-            </p>
-            <a id="viewMyWorksBtn" href="#my-researches" class="bg-black text-white hover:bg-gray-800 hover:text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 fade-in fade-in-delay-3 mt-20"> View My Works
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 h-full relative z-10 overflow-hidden flex flex-col">
+        
+        <!-- NEW: Social Links Container (Fixed Top Right) -->
+        <div class="fixed-social-bar md:right-4 md:top-4 lg:right-6 lg:top-6 flex items-center space-x-4 text-slate-600 text-lg">
+            <a href="https://linkedin.com/in/sknion" target="_blank" class="hover:text-blue-600 transition" aria-label="LinkedIn">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://www.researchgate.net/profile/Md-Sahariar-Kabir-Nion" target="_blank" class="hover:text-blue-600 transition" aria-label="ResearchGate">
+                <i class="fab fa-researchgate"></i>
+            </a>
+            <a href="https://instagram.com/sknionn" target="_blank" class="hover:text-blue-600 transition" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
             </a>
         </div>
-    </section>
+        <!-- END NEW SOCIAL BAR -->
 
-    <section id="about" class="py-6 md:py-12 bg-black">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 gap-12 items-center">
-            <div class="fade-in text-right">
-                <h2 class="text-4xl font-bold text-white mb-5">About Me</h2>
-                <p class="text-lg text-white leading-relaxed mb-3 text-justify">
-                    Highly motivated and detail-oriented seeking a position to contribute to impactful research projects, enhance
-                    research skills, and gain practical experience in the field of Environmental Engineering. Eager to apply strong
-                    analytical, technical, and problem-solving abilities to support research initiatives and contribute to the
-                    advancement of knowledge in this field.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="skills" class="py-6 md:py-12 bg-black">
-        <div class="max-w-7xl mx-auto px-6 text-left">
-            <h2 class="text-4xl font-bold text-white mb-10 fade-in">My Skills</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                <div class="bg-black p-4 rounded-lg shadow-lg transition duration-300 fade-in fade-in-delay-1 cursor-pointer skill-card flex flex-col items-center justify-center text-center"
-                    data-skill-category="Technical Skill"
-                    data-skill-title="ArcGIS Pro"
-                    data-skill-description="Proficient in geospatial analysis, mapping, and data management using ArcGIS Pro, including spatial data visualization, geoprocessing, and creating interactive maps.">
-                    <h3 class="text-xl font-semibold text-white">ArcGIS Pro</h3>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg transition duration-300 fade-in fade-in-delay-2 cursor-pointer skill-card flex flex-col items-center justify-center text-center"
-                    data-skill-category="Technical Skill"
-                    data-skill-title="ETABS"
-                    data-skill-description="Skilled in structural analysis and design of buildings according to BNBC 2020 using ETABS software, including modeling, analysis of complex structures, and seismic design considerations.">
-                    <h3 class="text-xl font-semibold text-white">ETABS</h3>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg transition duration-300 fade-in fade-in-delay-3 cursor-pointer skill-card flex flex-col items-center justify-center text-center"
-                    data-skill-category="Technical Skill"
-                    data-skill-title="AutoCAD"
-                    data-skill-description="Expert in creating precise 2D designs for engineering projects, including drafting, architectural layouts, and civil infrastructure plans.">
-                    <h3 class="text-xl font-semibold text-white">AutoCAD</h3>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg transition duration-300 fade-in fade-in-delay-4 cursor-pointer skill-card flex flex-col items-center justify-center text-center"
-                    data-skill-category="Technical Skill"
-                    data-skill-title="OriginPro"
-                    data-skill-description="Adept at data analysis, graphing, and scientific plotting with OriginPro, capable of generating high-quality visualizations and performing statistical analysis for research data.">
-                    <h3 class="text-xl font-semibold text-white">OriginPro</h3>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg transition duration-300 fade-in cursor-pointer skill-card flex flex-col items-center justify-center text-center"
-                    data-skill-category="Organizational Skill"
-                    data-skill-title="Scientific Writing"
-                    data-skill-description="Proficient in crafting clear, concise, and impactful scientific reports, research papers, and technical documentation, adhering to academic standards and publication guidelines.">
-                    <h3 class="text-xl font-semibold text-white">Scientific Writing</h3>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg transition duration-300 fade-in fade-in-delay-1 cursor-pointer skill-card flex flex-col items-center justify-center text-center"
-                    data-skill-category="Organizational Skill"
-                    data-skill-title="Logistics Management"
-                    data-skill-description="Assisting with various project-related tasks, including grant applications, email/folder organization, and communication with team to conduct meetings.">
-                    <h3 class="text-xl font-semibold text-white">Logistics Management</h3>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg transition duration-300 fade-in fade-in-delay-2 cursor-pointer skill-card flex flex-col items-center justify-center text-center"
-                    data-skill-category="Organizational Skill"
-                    data-skill-title="Team Leadership"
-                    data-skill-description="Experienced in leading and motivating teams, fostering collaboration, and guiding members towards achieving common goals through effective communication and delegation.">
-                    <h3 class="text-xl font-semibold text-white">Team Leadership</h3>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg transition duration-300 fade-in fade-in-delay-3 cursor-pointer skill-card flex flex-col items-center justify-center text-center"
-                    data-skill-category="Organizational Skill"
-                    data-skill-title="Manpower Management"
-                    data-skill-description="Adept at optimizing human resources, including recruitment, training, scheduling, and performance monitoring to ensure efficient project execution and team productivity.">
-                    <h3 class="text-xl font-semibold text-white">Manpower Management</h3>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg transition duration-300 fade-in fade-in-delay-4 cursor-pointer skill-card flex flex-col items-center justify-center text-center"
-                    data-skill-category="Organizational Skill"
-                    data-skill-title="Event Organizing"
-                    data-skill-description="Capable of planning, coordinating, and executing successful events from conception to completion, including budget management, vendor negotiation, and on-site logistics.">
-                    <h3 class="text-xl font-semibold text-white">Event Organizing</h3>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg transition duration-300 fade-in fade-in-delay-4 cursor-pointer skill-card flex flex-col items-center justify-center text-center"
-                    data-skill-category="Other Skill"
-                    data-skill-title="AI Practitioner"
-                    data-skill-description="This website was developed using AI.">
-                    <h3 class="text-xl font-semibold text-white">AI Practitioner</h3>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="experience" class="py-6 md:py-12 bg-black">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold text-white mb-10 fade-in">Professional Experience</h2>
-            <div class="timeline-wrapper relative">
-                <div class="timeline-line hidden sm:block"></div>
-
-                <!-- End of the Bachelors -->
-                <div class="timeline-item fade-in fade-in-delay-1" style="flex: 0 0 200px; margin-right: 20px;">
-                    <div class="timeline-top-content py-2">
-                        <h3 class="text-xl font-semibold text-white">End of the Bachelors</h3>
+        <!-- Content Container -->
+        <div class="flex-1 overflow-y-auto custom-scroll p-4 md:p-10 relative" id="content-container">
+            
+            <!-- 1. HOME SECTION -->
+            <section id="home" class="page-section min-h-full flex flex-col justify-center items-start max-w-4xl mx-auto animate-fade-in">
+                <div class="flex flex-row items-center gap-6 mb-8">
+                    <!-- Photo Holder: Implemented as an IMG tag inside a stylized frame div -->
+                    <div class="portrait-frame flex-shrink-0">
+                        <img 
+                            src="https://placehold.co/128x160/cbd5e1/475569?text=Portrait+Holder" 
+                            alt="Professional Portrait Placeholder" 
+                            onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'text-slate-400 text-sm\'>Image<br>Required</div>'"
+                        />
                     </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-bottom-content py-2">
-                       <p class="text-gray-400 text-sm">July 2024</p>
-                    </div>
-                </div>
-
-                <!-- Intern Engineer -->
-                <div class="timeline-item fade-in fade-in-delay-2" style="flex: 0 0 200px;">
-                    <div class="timeline-top-content py-2">
-                       <h3 class="text-xl font-semibold text-white">Intern Engineer</h3>
-                        <p class="text-gray-300">Total Barakah Housing Bangladesh Ltd.</p>
-                    </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-bottom-content py-2">
-                        <p class="text-gray-400 text-sm">July 2024 - August 2024</p>
-                    </div>
-                </div>
-
-                <!-- Research Volunteer -->
-                <div class="timeline-item fade-in fade-in-delay-3" style="flex: 0 0 200px; margin-left: auto;">
-                    <div class="timeline-top-content py-2">
-                        <h3 class="text-xl font-semibold text-white">Research Assistant</h3>
-                        <p class="text-gray-300">ARG/WEFC Nexus Lab</p>
-                    </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-bottom-content py-2">
-                        <p class="text-gray-400 text-sm">May 2025 - Present</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="professional-affiliations" class="py-0 md:py-6 bg-black">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold text-white mb-10 fade-in text-right">Professional Affiliations</h2>
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-2 fade-in fade-in-delay-1">
-                <p class="text-xl sm:text-2xl font-semibold text-white text-center sm:text-left">
-                    The Institution of Engineers, Bangladesh (IEB)
-                </p>
-                <div class="flex flex-col items-center sm:items-end">
-                    <p class="text-sm text-gray-400 mb-1">Membership Number</p>
-                    <div class="bg-white text-black py-4 px-8 rounded-lg shadow-lg">
-                        <p class="text-lg font-bold">A-27450</p>
-                    </div>
-                </div>
-                </div>
-        </div>
-    </section>
-
-    <section id="academic-background" class="py-6 md:py-12 bg-black">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold text-white mb-10 fade-in">Academic Background</h2>
-            <div class="timeline-wrapper flex flex-col sm:flex-row justify-center relative">
-                <div class="timeline-line hidden sm:block"></div>
-
-                <div class="timeline-item fade-in fade-in-delay-1">
-                    <div class="timeline-top-content py-2">
-                        <h3 class="text-xl font-semibold text-white">Secondary School Certificate</h3>
-                        <p class="text-gray-300 opacity-75">Bright School and College</p>
-                    </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-bottom-content py-2">
-                        <p class="text-gray-400 text-sm">2015 - 2017</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item fade-in fade-in-delay-2">
-                    <div class="timeline-top-content py-2">
-                        <h3 class="text-xl font-semibold text-white">Higher Secondary Certificate</h3>
-                        <p class="text-gray-300 opacity-75">Government Science College</p>
-                    </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-bottom-content py-2">
-                        <p class="text-gray-400 text-sm">2017 - 2019</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item fade-in fade-in-delay-3">
-                    <div class="timeline-top-content py-2">
-                        <h3 class="text-xl font-semibold text-white">Bachelor of Science</h3>
-                        <p class="text-white">Civil Engineering</p>
-                        <p class="text-white opacity-75">University of Asia Pacific</p>
-                    </div>
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-bottom-content py-2">
-                        <p class="text-gray-400 text-sm">2019 - 2024</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="standardized-test-scores" class="py-6 md:py-12 bg-black">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-4xl font-bold text-white mb-10 fade-in text-left">Standardized Test Scores</h2>
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between fade-in fade-in-delay-1 mb-8">
-                <p class="text-xl sm:text-2xl font-semibold text-white text-left">
-                    IELTS - International English Language Testing System
-                </p>
-                <p class="text-gray-400 italic text-right">February 2025</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                <div class="bg-black p-4 rounded-lg shadow-lg border border-gray-700 flex flex-col items-center justify-center text-center fade-in fade-in-delay-2">
-                    <p class="text-sm font-semibold text-gray-400 mb-1">Overall Score</p>
-                    <p class="text-3xl font-bold text-white">7.5</p>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg border border-gray-700 flex flex-col items-center justify-center text-center fade-in fade-in-delay-3">
-                    <p class="text-sm font-semibold text-gray-400 mb-1">Listening Module</p>
-                    <p class="text-3xl font-bold text-white">8.5</p>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg border border-gray-700 flex flex-col items-center justify-center text-center fade-in fade-in-delay-4">
-                    <p class="text-sm font-semibold text-gray-400 mb-1">Reading Module</p>
-                    <p class="text-3xl font-bold text-white">7.5</p>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg border border-gray-700 flex flex-col items-center justify-center text-center fade-in fade-in-delay-5">
-                    <p class="text-sm font-semibold text-gray-400 mb-1">Writing Module</p>
-                    <p class="text-3xl font-bold text-white">7</p>
-                </div>
-                <div class="bg-black p-4 rounded-lg shadow-lg border border-gray-700 flex flex-col items-center justify-center text-center fade-in fade-in-delay-6">
-                    <p class="text-sm font-semibold text-gray-400 mb-1">Speaking Module</p>
-                    <p class="text-3xl font-bold text-white">6</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="my-researches" class="py-6 md:py-12 bg-black">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="text-4xl font-bold text-white mb-10 fade-in">My Researches</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center">
-                <!-- Journal Article Card - Moved before Undergraduate Thesis Card -->
-                <div class="bg-black rounded-lg shadow-lg overflow-hidden transition duration-300 fade-in fade-in-delay-1 w-full max-w-sm border border-gray-700">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-white mb-2">Work in progress...</h3>
-                        <span class="open-abstract-btn mt-4 text-gray-400 hover:text-white hover:underline font-medium cursor-pointer transition duration-300 ease-in-out"
-                            data-abstract-category="Research"
-                            data-abstract-title="Work in progress..."
-                            data-abstract-content="Currently working on several projects. Details to be added soon. Thanks.">
-                            Details
-                        </span>
-                    </div>
-                </div>
-                <!-- New Research Card -->
-                <div class="bg-black p-4 rounded-lg shadow-lg overflow-hidden transition duration-300 fade-in fade-in-delay-2 w-full max-w-sm border border-gray-700">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-white mb-2">Surveillance of SARS-CoV-2 during Pandemic through Wastewater-Based Epidemiology</h3>
-                        <span class="open-abstract-btn mt-4 text-gray-400 hover:text-white hover:underline font-medium cursor-pointer transition duration-300 ease-in-out"
-                            data-abstract-category="Mini Review"
-                            data-abstract-title="Surveillance of SARS-CoV-2 during Pandemic through Wastewater-Based Epidemiology"
-                            data-abstract-content="Azam, H.&lt;sup&gt;1&lt;/sup&gt;, Nion, S.K.&lt;sup&gt;2&lt;/sup&gt;&lt;br&gt;&lt;br&gt;1. Associate Professor, Civil Engineering,&lt;br&gt;School of Engineering and Applied Sciences, University of the District of Columbia&lt;br&gt;2. Research Assistant/Civil Engineer">
-                            Details
-                        </span>
-                    </div>
-                </div>
-                <!-- Undergraduate Thesis Card -->
-                <div class="bg-black p-4 rounded-lg shadow-lg overflow-hidden transition duration-300 fade-in fade-in-delay-3 w-full max-w-sm border border-gray-700">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-white mb-2">Assessment of Risk from The Outfall Discharges into Turag River and The Effects on Its Aquatic Ecosystems</h3>
-                        <span class="open-abstract-btn mt-4 text-gray-400 hover:text-white hover:underline font-medium cursor-pointer transition duration-300 ease-in-out"
-                            data-abstract-category="Undergraduate Thesis"
-                            data-abstract-title="Assessment of Risk from The Outfall Discharges into Turag River and The Effects on Its Aquatic Ecosystems."
-                            data-abstract-content="Nion, S.K.&lt;sup&gt;1&lt;/sup&gt; , Khan, H.&lt;sup&gt;1&lt;/sup&gt;&lt;br&gt;&lt;br&gt;1. Student, Civil Engineering, School of Engineering, University of Asia Pacific">
-                            Details
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="other-achievements" class="py-6 md:py-12 bg-black">
-        <div class="max-w-7xl mx-auto px-6 text-right">
-            <h2 class="text-4xl font-bold text-white mb-10 fade-in">Other Notable Activities</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Left Column -->
-                <div class="flex flex-col items-end text-right">
-                    <div class="fade-in fade-in-delay-1">
-                        <p class="text-xl text-white mb-2">
-                            <span>Vice Chancellor’s List of Meritorious Students</span><br>
-                            <span class="text-base opacity-75">for Fall 2020 at University of Asia Pacific</span>
+                    <div>
+                        <h1 class="text-3xl font-serif font-bold text-slate-800">Md. Sahariar Kabir Nion<span class="text-teal-600">.</span></h1>
+                        <!-- Professional Titles: TEAL -->
+                        <p class="text-xs text-teal-600 tracking-widest mt-1 uppercase font-semibold mb-3">AMIEB | RESEARCH ASSISTANT | BEN FELLOW</p>
+                        
+                        <!-- Education Summary: TEAL -->
+                        <p class="text-slate-500 text-sm leading-relaxed border-l-2 border-teal-600/20 pl-3 mb-4">
+                            <span class="font-semibold text-slate-700">B.Sc. in Civil Engineering</span><br>
+                            <span class="text-slate-400">University of Asia Pacific</span>
                         </p>
-                    </div>
-                    <div class="fade-in fade-in-delay-2">
-                        <p class="text-xl text-white mb-2">
-                            <span>Dean’s List of Meritorious Students</span><br>
-                            <span class="text-base opacity-75">for Spring 2021 at University of Asia Pacific</span>
-                        </p>
+
+                        <!-- Contact Icons/Text: TEAL -->
+                        <div class="text-sm text-slate-500 space-y-1 font-medium">
+                            <div class="flex items-center gap-2 group">
+                                <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-teal-600 text-xs hover:bg-slate-200 transition">
+                                    <i class="fas fa-phone"></i>
+                                </span>
+                                <span>(+880) 1777123418, (+880) 1516534650</span>
+                            </div>
+                            <div class="flex items-center gap-2 group">
+                                <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-teal-600 text-xs hover:bg-slate-200 transition">
+                                    <i class="fas fa-envelope"></i>
+                                
+                                </span>
+                                <a href="mailto:sknion7@gmail.com" class="hover:text-teal-600 transition">sknion7@gmail.com</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- Right Column -->
-                <div class="flex flex-col items-end text-right">
-                    <div class="fade-in fade-in-delay-3">
-                        <p class="text-xl text-white mb-2">
-                            <span>President</span><br>
-                            <span class="text-base opacity-75">Structural Engineering Club</span>
-                        </p>
-                    </div>
-                    <div class="fade-in fade-in-delay-4">
-                        <p class="text-xl text-white mb-2">
-                            <span>Student Member</span><br>
-                            <span class="text-base opacity-75">American Concrete Institute (ACI)</span>
-                        </p>
-                    </div>
-                    <div class="fade-in fade-in-delay-5">
-                        <p class="text-xl text-white mb-2">
-                            <span>General Member</span><br>
-                            <span class="text-base opacity-75">Government Science College Science Club</span>
-                        </p>
+            </section>
+
+            <!-- 2. ABOUT SECTION -->
+            <section id="about" class="page-section hidden max-w-4xl mx-auto pt-4">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-800 mb-8 border-b border-slate-200 pb-4">About</h2>
+                
+                <div class="glass-panel p-8 rounded-3xl mb-8">
+                    <p class="text-slate-600 text-lg leading-loose text-justify">
+                        Md. Sahariar Kabir Nion completed his bachelor's degree in civil engineering from the University of Asia Pacific (UAP), Dhaka. Currently, he is working remotely as a Research Assistant in the Azam Research Group at the Water-Energy-Food-Climate Nexus Lab, focusing on water and wastewater management. He is also working as a Fellow for Bangladesh Environment Network-BEN, where he is contributing to different BEN activities.
                     </p>
+                    <p class="text-slate-600 text-lg leading-loose text-justify mt-4">
+                        Previously, Nion interned as a Civil Engineer at Total Barakah Housing Bangladesh Limited-TBHBL, where he contributed to site supervision, project management, and cost estimation. He completed his undergraduate thesis on “Risk Assessment of Outfall Discharges into Turag River and Effect on Its Aquatic Ecosystems.” Beyond research, he actively participated in student leadership as President of the Structural Engineering Club at UAP Civil Engineering Department. His technical skill set includes ArcGIS Pro, IBM SPSS Statistics, Origin Pro, ETABS, and AutoCAD.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 3. EXPERTISE (SKILLS) SECTION -->
+            <section id="skills" class="page-section hidden max-w-3xl mx-auto pt-4">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-800 mb-8 border-b border-slate-200 pb-4">Expertise</h2>
+                
+                <!-- 1. ENGINEERING -->
+                <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider">Engineering & Design</h3>
+                <div class="flex flex-col gap-4 mb-12">
+                    <div onclick="openModal('skill-autocad')" class="glass-panel p-6 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">AutoCAD</h3>
+                    </div>
+                    <div onclick="openModal('skill-etabs')" class="glass-panel p-6 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">ETABS</h3>
+                    </div>
+                    <div onclick="openModal('skill-struct')" class="glass-panel p-6 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">Structural Analysis</h3>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <section id="contact" class="py-6 md:py-10 bg-black">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row gap-6 items-center">
-            <!-- Form on the left -->
-            <div class="w-full md:w-1/2">
-                <h2 class="text-4xl font-bold text-white mb-6 fade-in text-left">Send Me a Message</h2>
-                <p class="text-lg text-gray-200 mb-6 fade-in fade-in-delay-1 text-left">
-                    Have a project in mind or just want to connect?<br>Feel free to reach out!
-                </p>
-                <form id="contactForm" class="bg-black p-4 rounded-lg shadow-lg fade-in fade-in-delay-2 max-w-md md:max-w-none">
-                    <div class="mb-3 text-left">
-                        <label for="name" class="block text-gray-200 text-sm font-bold mb-2">Name</label>
-                        <input type="text" id="name" name="name" class="shadow appearance-none border border-gray-300 rounded-md w-full py-2 px-3 bg-white text-black leading-tight focus:outline-none focus:ring-2 focus:ring-gray-400 transition duration-200" placeholder="Your Name">
+                <!-- 2. ANALYSIS -->
+                <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider border-t border-slate-200 pt-8">Analysis & Research</h3>
+                <div class="flex flex-col gap-4 mb-12">
+                    <div onclick="openModal('skill-arcgis')" class="glass-panel p-6 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">ArcGIS Pro</h3>
                     </div>
-                    <div class="mb-3 text-left">
-                        <label for="subject" class="block text-gray-200 text-sm font-bold mb-2">Subject</label>
-                        <input type="text" id="subject" name="subject" class="shadow appearance-none border border-gray-300 rounded-md w-full py-2 px-3 bg-white text-black leading-tight focus:outline-none focus:ring-2 focus:ring-gray-400 transition duration-200" placeholder="Subject of your message">
+                    <div onclick="openModal('skill-origin')" class="glass-panel p-6 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">OriginPro</h3>
                     </div>
-                    <div class="mb-3 text-left">
-                        <label for="message" class="block text-gray-200 text-sm font-bold mb-2">Message</label>
-                        <textarea id="message" name="message" rows="5" class="shadow appearance-none border border-gray-300 rounded-md w-full py-2 px-3 bg-white text-black leading-tight focus:outline-none focus:ring-2 focus:ring-gray-400 transition duration-200" placeholder="Your message..."></textarea>
+                    <div onclick="openModal('skill-writing')" class="glass-panel p-6 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">Scientific Writing</h3>
                     </div>
-                    <button type="submit" class="bg-white hover:bg-gray-200 text-black font-bold py-2 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
-                        Send Message
-                    </button>
-                </form>
-            </div>
-
-            <!-- Clock display on the right -->
-            <div class="w-full md:w-1/2 flex justify-center md:justify-end items-center">
-                <div id="live-clock" class="text-white p-4 rounded-lg shadow-lg bg-black flex flex-col items-center">
-                    <div id="clock-time" class="text-4xl sm:text-5xl font-bold bg-black p-2 rounded-md mb-2"></div>
-                    <div id="clock-date" class="text-base sm:text-lg bg-black p-2 rounded-md"></div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <footer class="bg-white text-black py-4">
-        <div class="max-w-xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between">
-            <p class="text-black text-lg font-semibold mb-4 sm:mb-0">Thank you!</p>
-            <!-- Signature Image and Full Name -->
-            <div class="flex flex-col items-center text-center">
-                <img src="sign.png" alt="Signature Placeholder" class="mb-2">
-                <p class="text-black text-lg font-semibold">Md. Sahariar Kabir Nion</p>
-            </div>
-        </div>
-    </footer>
+                <!-- 3. WEB DEVELOPMENT -->
+                <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider border-t border-slate-200 pt-8">Web Development</h3>
+                <div class="flex flex-col gap-4 mb-12">
+                    <div onclick="openModal('skill-wordpress')" class="glass-panel p-6 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">WordPress</h3>
+                    </div>
+                </div>
 
-    <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" id="closeInfoModal">&times;</span>
-            <p id="infoModalCategory" class="text-sm text-gray-400 mb-2"></p>
-            <h3 id="infoModalTitle" class="text-2xl font-bold text-white mb-4"></h3>
-            <p id="infoModalContent" class="text-gray-200 leading-relaxed"></p>
-            <div id="loadingIndicator" class="hidden text-center mt-4">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white inline-block"></div>
-                <p class="text-gray-400 mt-2">Generating description...</p>
-            </div>
-        </div>
-    </div>
+                <!-- 4. LEADERSHIP -->
+                <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider border-t border-slate-200 pt-8">Leadership & Management</h3>
+                <div class="flex flex-col gap-4">
+                    <div onclick="openModal('skill-logistics')" class="glass-panel p-6 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">Logistics Management</h3>
+                    </div>
+                    <div onclick="openModal('skill-team')" class="glass-panel p-6 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">Team Leadership</h3>
+                    </div>
+                    <div onclick="openModal('skill-event')" class="glass-panel p-6 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">Event Organizing</h3>
+                    </div>
+                </div>
+            </section>
 
-    <div id="skillDetailModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" id="closeSkillModal">&times;</span>
-            <p id="skillModalCategory" class="text-sm text-gray-400 mb-2"></p>
-            <h3 id="skillModalTitle" class="text-2xl font-bold text-white mb-4"></h3>
-            <p id="skillModalDescription" class="text-gray-200 leading-relaxed"></p>
-            <div id="skillModalOrganizations" class="mt-4">
-                <h4 class="text-lg font-semibold text-white mb-2">Organizations</h4>
-                <ul id="skillModalOrganizationsList" class="list-disc list-inside text-gray-300">
-                    </ul>
+            <!-- 4. EXPERIENCE SECTION -->
+            <section id="experience" class="page-section hidden max-w-4xl mx-auto pt-4">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-800 mb-8 border-b border-slate-200 pb-4">Experience</h2>
+                
+                <div class="max-w-3xl mx-auto">
+                    
+                    <!-- Group 1: Professional -->
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider">Professional Experience</h3>
+                    <div class="space-y-8 border-l-2 border-slate-200 ml-3 pl-8 relative mb-12">
+                        
+                        <!-- Fellow (Present) -->
+                        <div class="relative group">
+                            <div class="absolute -left-[41px] top-0 w-6 h-6 rounded-full bg-blue-600 ring-4 ring-white shadow-md flex items-center justify-center">
+                                <div class="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                            <div onclick="openModal('exp-fellow')" class="glass-panel p-8 rounded-2xl hover:bg-white transition border-l-4 border-blue-600 shadow-sm hover:shadow-md cursor-pointer group">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                    <h4 class="text-xl font-bold text-slate-800">Fellow</h4>
+                                    <span class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 mt-2 md:mt-0 w-fit flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                                        Oct 2025 - Present
+                                    </span>
+                                </div>
+                                <p class="text-teal-600 font-medium group-hover:text-blue-800 transition">Bangladesh Environment Network-BEN</p>
+                            </div>
+                        </div>
+
+                        <!-- Intern (Past) -->
+                        <div class="relative group">
+                            <div class="absolute -left-[41px] top-0 w-6 h-6 rounded-full bg-slate-400 ring-4 ring-white shadow-md flex items-center justify-center">
+                                <div class="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                            <div onclick="openModal('exp-intern')" class="glass-panel p-8 rounded-2xl hover:bg-white transition border-l-4 border-slate-400 shadow-sm hover:shadow-md cursor-pointer group opacity-90 hover:opacity-100">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                    <h4 class="text-xl font-bold text-slate-800">Intern Engineer</h4>
+                                    <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 mt-2 md:mt-0 w-fit">
+                                        Jul 2024 - Aug 2024
+                                    </span>
+                                </div>
+                                <p class="text-teal-600 font-medium group-hover:text-blue-800 transition">Total Barakah Housing Bangladesh Ltd.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Group 2: Academic -->
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider border-t border-slate-200 pt-8">Academic Experience</h3>
+                    <div class="space-y-8 border-l-2 border-slate-200 ml-3 pl-8 relative">
+                        
+                        <!-- Research Assistant (Present) -->
+                        <div class="relative group">
+                            <div class="absolute -left-[41px] top-0 w-6 h-6 rounded-full bg-blue-600 ring-4 ring-white shadow-md flex items-center justify-center">
+                                <div class="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                            <div onclick="openModal('exp-ra')" class="glass-panel p-8 rounded-2xl hover:bg-white transition border-l-4 border-blue-600 shadow-sm hover:shadow-md cursor-pointer group">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                    <h4 class="text-xl font-bold text-slate-800">Research Assistant</h4>
+                                    <span class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 mt-2 md:mt-0 w-fit flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                                        May 2025 - Present
+                                    </span>
+                                </div>
+                                <p class="text-teal-600 font-medium group-hover:text-blue-800 transition">ARG/WEFC Nexus Lab</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 5. EDUCATION SECTION -->
+            <section id="education" class="page-section hidden max-w-5xl mx-auto pt-4">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-800 mb-8 border-b border-slate-200 pb-4">Education</h2>
+
+                <div class="max-w-3xl mx-auto">
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider">Academic Background</h3>
+                    
+                    <!-- Degrees Stack (Vertical List) -->
+                    <div class="flex flex-col gap-6 mb-12">
+                         <!-- Edu 1 (Wide Card) -->
+                         <div onclick="openModal('edu-bsc')" class="glass-panel p-8 rounded-2xl border-l-4 border-teal-600 group-hover:border-blue-600 transition-colors hover:bg-white cursor-pointer shadow-sm hover:shadow-md group w-full">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 leading-tight">B.Sc. in Civil Engineering</h3>
+                                <span class="text-xs font-bold text-teal-600 bg-teal-50 border-teal-100 border px-3 py-1 rounded-full w-fit mt-2 md:mt-0">2019 - 2024</span>
+                            </div>
+                            <p class="text-teal-600 font-medium group-hover:text-blue-800 transition-colors text-sm">University of Asia Pacific</p>
+                         </div>
+
+                         <!-- Edu 2 (Hidden) -->
+                         <div onclick="openModal('edu-hsc')" class="hidden glass-panel p-8 rounded-2xl border-l-4 border-teal-600 group-hover:border-blue-600 transition-colors hover:bg-white cursor-pointer shadow-sm hover:shadow-md group w-full">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 leading-tight">Higher Secondary Certificate</h3>
+                                <span class="text-xs font-bold text-teal-600 bg-teal-50 border-teal-100 border px-3 py-1 rounded-full w-fit mt-2 md:mt-0">2017 - 2019</span>
+                            </div>
+                            <p class="text-teal-600 font-medium group-hover:text-slate-700 transition-colors text-sm">Government Science College</p>
+                         </div>
+
+                         <!-- Edu 3 (Hidden) -->
+                         <div onclick="openModal('edu-ssc')" class="hidden glass-panel p-8 rounded-2xl border-l-4 border-teal-600 group-hover:border-blue-600 transition-colors hover:bg-white cursor-pointer shadow-sm hover:shadow-md group w-full">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 leading-tight">Secondary School Certificate</h3>
+                                <span class="text-xs font-bold text-teal-600 bg-teal-50 border-teal-100 border px-3 py-1 rounded-full w-fit mt-2 md:mt-0">2015 - 2017</span>
+                            </div>
+                            <p class="text-teal-600 font-medium group-hover:text-slate-700 transition-colors text-sm">Bright School and College</p>
+                         </div>
+                    </div>
+
+                    <!-- Standardized Test Scores Section -->
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider border-t border-slate-200 pt-8">Standardized Test Scores</h3>
+                    
+                    <div class="flex flex-col gap-6">
+                        <!-- IELTS Card (Wide) -->
+                        <div onclick="openModal('test-ielts')" class="glass-panel p-8 rounded-2xl border-l-4 border-teal-600 group-hover:border-blue-600 hover:bg-white transition-colors cursor-pointer shadow-sm hover:shadow-md group w-full">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800">IELTS</h3>
+                                <!-- Score: Teal (Default) -> Blue (on Hover) -->
+                                <span class="text-lg font-bold text-white bg-teal-600 group-hover:bg-blue-600 transition-colors px-3 py-1 rounded-lg shadow-md mt-2 md:mt-0 w-fit">7.5</span>
+                            </div>
+                            <!-- Text: Teal (Default) -> Blue (on Hover) -->
+                            <p class="text-teal-600 font-medium group-hover:text-blue-600 transition-colors text-sm">International English Language Testing System</p>
+                            <p class="text-slate-400 text-xs mt-2">Feb 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. RESEARCH SECTION -->
+            <section id="research" class="page-section hidden max-w-5xl mx-auto pt-4">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-800 mb-8 border-b border-slate-200 pb-4">Research</h2>
+                
+                <div class="max-w-3xl mx-auto">
+                    <!-- Research Article Section -->
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider">Research Article</h3>
+                    
+                    <div class="flex flex-col gap-6 mb-12">
+                        <!-- Research Card 5 (Active 2025 - Blue + Pulse) -->
+                        <div onclick="openModal('research-5')" class="glass-panel p-8 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors leading-tight">Assessment of Risk from The Outfall Discharges into Turag River and The Effects on Its Aquatic Ecosystems</h3>
+                                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 mt-2 md:mt-0 w-fit flex-shrink-0 h-fit flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                                    2025
+                                </span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Nion, S.K., Ali, R., Khan, H., Majed, N.</p>
+                        </div>
+                    </div>
+
+                    <!-- Review Article Section -->
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider border-t border-slate-200 pt-8">Review Article</h3>
+                    
+                    <div class="flex flex-col gap-6 mb-12">
+                        <!-- Research Card 4 (Active 2025 - Blue + Pulse) -->
+                        <div onclick="openModal('research-4')" class="glass-panel p-8 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors leading-tight">Microplastics & Nanoplastics and Human Health: Pathways from Environmental Exposure to Cardiovascular Risk</h3>
+                                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 mt-2 md:mt-0 w-fit flex-shrink-0 h-fit flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                                    2025
+                                </span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Haque, N., Nion, S.K., Azam, H., Pruett, B., Campo, C.</p>
+                        </div>
+                    </div>
+
+                    <!-- Mini Review Section -->
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider border-t border-slate-200 pt-8">Mini Review</h3>
+                    
+                    <div class="flex flex-col gap-6 mb-12">
+                         <!-- Research Card 3 (Active 2025 - Blue + Pulse) -->
+                         <div onclick="openModal('research-3')" class="glass-panel p-8 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors leading-tight">Current Status of Environmental Pollutants in Water and Food with Their Associated Risks in Urban Areas of Bangladesh</h3>
+                                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 mt-2 md:mt-0 w-fit flex-shrink-0 h-fit flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                                    2025
+                                </span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Azam, H., Nion, S.K.</p>
+                        </div>
+
+                        <!-- Research Card 1 (Completed 2025 - Slate - No Pulse) -->
+                        <div onclick="openModal('research-1')" class="glass-panel p-8 rounded-2xl border-l-4 border-slate-400 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full opacity-90 hover:opacity-100">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors leading-tight">Surveillance of SARS-CoV-2 via Wastewater Epidemiology</h3>
+                                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 mt-2 md:mt-0 w-fit flex-shrink-0 h-fit">2025</span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Azam, H., Nion, S.K.</p>
+                        </div>
+                    </div>
+
+                    <!-- Thesis Section -->
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider border-t border-slate-200 pt-8">Thesis</h3>
+
+                    <div class="flex flex-col gap-6 mb-12">
+                        <!-- Research Card 2 (Completed 2024 - Slate - No Pulse) -->
+                        <div onclick="openModal('research-2')" class="glass-panel p-8 rounded-2xl border-l-4 border-slate-400 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full opacity-90 hover:opacity-100">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors leading-tight">Risk Assessment of Outfall Discharges into Turag River and Effect on Its Aquatic Ecosystems</h3>
+                                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 mt-2 md:mt-0 w-fit flex-shrink-0 h-fit">2024</span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Nion, S.K., Khan, H.</p>
+                        </div>
+                    </div>
+
+                    <!-- Acknowledgements Section -->
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider border-t border-slate-200 pt-8">Acknowledgements</h3>
+
+                    <div class="flex flex-col gap-6 mb-12">
+                        <!-- Acknowledgement Card 1 (Completed 2025 - Slate - No Pulse) -->
+                        <div onclick="openModal('ack-1')" class="glass-panel p-8 rounded-2xl border-l-4 border-slate-400 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full opacity-90 hover:opacity-100">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors leading-tight">Interim Update to PFAS in the Water and Wastewater Sectors</h3>
+                                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 mt-2 md:mt-0 w-fit flex-shrink-0 h-fit">2025</span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Kirkland, R.A., White, E.D., Azam, H.M.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. PRESENTATION SECTION (Workshops moved here) -->
+            <section id="presentations" class="page-section hidden max-w-5xl mx-auto pt-4">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-800 mb-8 border-b border-slate-200 pb-4">Presentation</h2>
+
+                <div class="max-w-3xl mx-auto">
+                    <!-- Seminars Section (First Two Cards) -->
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider">Seminars</h3>
+
+                    <div class="flex flex-col gap-6 mb-12">
+                        <!-- Workshop 1 (Completed 2025 - Slate) -->
+                        <div onclick="openModal('workshop-1')" class="glass-panel p-8 rounded-2xl border-l-4 border-slate-400 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full opacity-90 hover:opacity-100">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors leading-tight">Current Progress and Innovation in Environmental Microbiology: Global Advances and Applications for Bangladesh</h3>
+                                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 mt-2 md:mt-0 w-fit flex-shrink-0 h-fit">Sep 2025</span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Co-presenter | ISBM International E-Conference 2025</p>
+                        </div>
+
+                        <!-- Workshop 2 (Completed 2025 - Slate) -->
+                        <div onclick="openModal('workshop-2')" class="glass-panel p-8 rounded-2xl border-l-4 border-slate-400 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full opacity-90 hover:opacity-100">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors leading-tight">Commitments on Sustainable Waste Management in National Climate Plans</h3>
+                                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 mt-2 md:mt-0 w-fit flex-shrink-0 h-fit">Jul 2025</span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Co-presenter | Department of Environment, Bangladesh</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Workshop Section (Last Card) -->
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider border-t border-slate-200 pt-8">Workshop</h3>
+
+                    <div class="flex flex-col gap-6">
+                        <!-- Workshop 3 (Completed 2024 - Slate) -->
+                        <div onclick="openModal('workshop-3')" class="glass-panel p-8 rounded-2xl border-l-4 border-slate-400 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full opacity-90 hover:opacity-100">
+                            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors leading-tight">Workshop on Preliminary Selection of Seismic Contest Participants by FEA Software</h3>
+                                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200 mt-2 md:mt-0 w-fit flex-shrink-0 h-fit">Mar 2024</span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Instructor | Structural Engineering Club, UAP</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 8. MEMBERSHIP SECTION -->
+            <section id="affiliations" class="page-section hidden max-w-3xl mx-auto pt-4">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-800 mb-8 border-b border-slate-200 pb-4">Membership</h2>
+                
+                <div class="max-w-3xl mx-auto">
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider">Professional Affiliation</h3>
+
+                    <div class="flex flex-col gap-6 mb-12">
+                        <!-- IEB Card (Fixed padding and structure) -->
+                        <div onclick="openModal('affl-ieb')" class="glass-panel p-6 rounded-2xl border-l-4 border-blue-600 hover:bg-white transition cursor-pointer shadow-sm hover:shadow-md group w-full">
+                            <h3 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">The Institution of Engineers, Bangladesh (IEB)</h3>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-700 mb-6 uppercase tracking-wider border-t border-slate-200 pt-8">Academic Affiliations</h3>
+                    
+                    <div class="flex flex-col gap-4">
+                        <!-- ASCE Card (Teal -> Blue on Hover) -->
+                        <div onclick="openModal('affl-asce')" class="glass-panel p-6 rounded-2xl border-l-4 border-teal-600 group-hover:border-blue-600 hover:bg-white transition-colors cursor-pointer shadow-sm hover:shadow-md group w-full">
+                            <h3 class="text-lg font-bold text-teal-600 group-hover:text-blue-600 transition-colors">American Society of Civil Engineers (ASCE)</h3>
+                        </div>
+                        
+                        <!-- AAEES Card (Teal -> Blue on Hover) -->
+                        <div onclick="openModal('affl-aaees')" class="glass-panel p-6 rounded-2xl border-l-4 border-teal-600 group-hover:border-blue-600 hover:bg-white transition-colors cursor-pointer shadow-sm hover:shadow-md group w-full">
+                            <h3 class="text-lg font-bold text-teal-600 group-hover:text-blue-600 transition-colors">American Academy of Environmental Engineers & Scientists (AAEES)</h3>
+                        </div>
+                        
+                        <!-- ACI Card (Teal -> Blue on Hover) -->
+                        <div onclick="openModal('affl-aci')" class="glass-panel p-6 rounded-2xl border-l-4 border-teal-600 group-hover:border-blue-600 hover:bg-white transition-colors cursor-pointer shadow-sm hover:shadow-md group w-full">
+                            <h3 class="text-lg font-bold text-teal-600 group-hover:text-blue-600 transition-colors">American Concrete Institute (ACI)</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. CONTACT SECTION -->
+            <section id="contact" class="page-section hidden max-w-4xl mx-auto pt-4 h-full flex flex-col justify-center">
+                <div class="glass-panel rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row">
+                    <div class="p-10 md:w-2/3">
+                        <!-- Title Changed -->
+                        <h2 class="text-3xl font-serif font-bold text-slate-800 mb-6">Contact</h2>
+                        
+                        <form id="contactForm" class="space-y-6">
+                            <div>
+                                <input type="text" id="name" placeholder="Your Name" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:border-blue-500 transition placeholder-slate-400">
+                            </div>
+                            <div>
+                                <input type="text" id="subject" placeholder="Subject" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:border-blue-500 transition placeholder-slate-400">
+                            </div>
+                            <div>
+                                <textarea id="message" rows="4" placeholder="Message" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:border-blue-500 transition placeholder-slate-400"></textarea>
+                            </div>
+                            <!-- Button Changed: bg-slate-800 -> bg-blue-600 -->
+                            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-600/20">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="bg-slate-100 p-10 md:w-1/3 flex flex-col justify-center border-l border-slate-200 text-center">
+                        <div class="mb-8">
+                            <div id="clock-time" class="text-3xl font-mono font-bold text-slate-800 mb-2">00:00</div>
+                            <div id="clock-date" class="text-blue-600 text-sm font-medium">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- MOBILE BOTTOM NAV -->
+    <nav class="md:hidden h-16 glass-sidebar border-t border-slate-200 flex items-center justify-around z-30 flex-shrink-0 overflow-x-auto no-scrollbar">
+        <!-- Removed icons from mobile nav too -->
+        <button onclick="switchTab('home')" class="mobile-nav-item text-blue-600 flex flex-col items-center min-w-[60px]" id="mob-home">
+            <span class="text-[10px] mt-1">Home</span>
+        </button>
+        <button onclick="switchTab('about')" class="mobile-nav-item text-slate-500 flex flex-col items-center min-w-[60px]" id="mob-about">
+            <span class="text-[10px] mt-1">About</span>
+        </button>
+        <button onclick="switchTab('skills')" class="mobile-nav-item text-slate-500 flex flex-col items-center min-w-[60px]" id="mob-skills">
+            <span class="text-[10px] mt-1">Expertise</span>
+        </button>
+        <button onclick="switchTab('experience')" class="mobile-nav-item text-slate-500 flex flex-col items-center min-w-[60px]" id="mob-experience">
+            <span class="text-[10px] mt-1">Exp</span>
+        </button>
+        <button onclick="switchTab('education')" class="mobile-nav-item text-slate-500 flex flex-col items-center min-w-[60px]" id="mob-education">
+            <span class="text-[10px] mt-1">Edu</span>
+        </button>
+        <button onclick="switchTab('research')" class="mobile-nav-item text-slate-500 flex flex-col items-center min-w-[60px]" id="mob-research">
+            <span class="text-[10px] mt-1">Research</span>
+        </button>
+        <!-- NEW: Presentations Navigation -->
+        <button onclick="switchTab('presentations')" class="mobile-nav-item text-slate-500 flex flex-col items-center min-w-[60px]" id="mob-presentations">
+            <span class="text-[10px] mt-1">Pres</span>
+        </button>
+        <button onclick="switchTab('affiliations')" class="mobile-nav-item text-slate-500 flex flex-col items-center min-w-[60px]" id="mob-affiliations">
+            <span class="text-[10px] mt-1">Mem</span>
+        </button>
+        <button onclick="switchTab('contact')" class="mobile-nav-item text-slate-500 flex flex-col items-center min-w-[60px]" id="mob-contact">
+            <span class="text-[10px] mt-1">Contact</span>
+        </button>
+    </nav>
+
+    <!-- Generic Modal -->
+    <div id="infoModal" class="fixed inset-0 z-[100] modal hidden flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h3 id="modalTitle" class="text-xl font-bold text-slate-800">Title</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+            </div>
+            <div class="p-8">
+                <div id="modalBody" class="text-slate-600 leading-relaxed"></div>
+                <div id="modalMeta" class="mt-6 pt-6 border-t border-slate-100 text-sm text-slate-500"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // Adjust hero section height dynamically
-        document.addEventListener('DOMContentLoaded', () => {
-            const navHeight = document.querySelector('nav').offsetHeight;
-            // Set the body's padding-top to the height of the fixed navbar
-            document.body.style.paddingTop = `${navHeight}px`;
-
-            // Set the hero section's min-height to fill the viewport minus the nav height
-            document.getElementById('hero').style.minHeight = `calc(100vh - ${navHeight}px)`;
-
-            // Intersection Observer for fade-in animations
-            const faders = document.querySelectorAll('.fade-in');
-            const appearOptions = {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
-            };
-
-            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) {
-                        return;
-                    } else {
-                        entry.target.style.opacity = 1;
-                        entry.target.style.transform = 'translateY(0)';
-                        appearOnScroll.unobserve(entry.target);
-                    }
-                });
-            }, appearOptions);
-
-            faders.forEach(fader => {
-                appearOnScroll.observe(fader);
+        /* -----------------------------------------------------------
+           NAVIGATION LOGIC (Moved to Top of Script)
+           ----------------------------------------------------------- */
+        function switchTab(tabId) {
+            // Hide all Sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('animate-fade-in');
             });
 
-            // --- Mailto form submission ---
-            document.getElementById('contactForm').addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
-
-                const name = document.getElementById('name').value;
-                const subject = document.getElementById('subject').value; // Get subject value
-                const message = document.getElementById('message').value;
-
-                const recipient = 'sknion7@gmail.com';
-                const mailtoSubject = encodeURIComponent(`Message from ${name}: ${subject}`); // Encode subject
-                const mailtoBody = encodeURIComponent(message); // Encode message
-
-                window.location.href = `mailto:${recipient}?subject=${mailtoSubject}&body=${mailtoBody}`;
-
-                // Optionally, clear the form after opening mail client
-                this.reset();
-            });
-
-            // --- Smooth scroll for "View My Works" button with offset ---
-            document.getElementById('viewMyWorksBtn').addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent default anchor link behavior
-
-                const targetId = this.getAttribute('href'); // Get the href (e.g., "#my-researches")
-                const targetElement = document.querySelector(targetId);
-
-                if (targetElement) {
-                    const navHeight = document.querySelector('nav').offsetHeight; // Get the height of the fixed navbar
-                    const offset = navHeight + 20; // A small extra padding for aesthetics
-
-                    window.scrollTo({
-                        top: targetElement.offsetTop - offset,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-
-            // --- Live Clock Logic ---
-            function updateClock() {
-                const now = new Date();
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-
-                const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                const dayName = days[now.getDay()];
-                const date = String(now.getDate()).padStart(2, '0');
-                const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-                const year = now.getFullYear();
-
-                document.getElementById('clock-time').textContent = `${hours}:${minutes}:${seconds}`;
-                document.getElementById('clock-date').textContent = `${dayName}, ${date}/${month}/${year}`;
-            }
-
-            // Update clock every second
-            setInterval(updateClock, 1000);
-            // Set initial time immediately
-            updateClock();
-        });
-
-
-        // --- General Info Modal Logic (for Project Descriptions and Abstracts) ---
-        const infoModal = document.getElementById('infoModal');
-        const infoModalCategory = document.getElementById('infoModalCategory');
-        const infoModalTitle = document.getElementById('infoModalTitle');
-        const infoModalContent = document.getElementById('infoModalContent');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const closeInfoModalButton = document.getElementById('closeInfoModal');
-
-        function openInfoModal(category, title, content) {
-            infoModalCategory.textContent = category;
-            infoModalTitle.textContent = title;
-            infoModalContent.innerHTML = content; // Use innerHTML to render HTML entities like <sup> and <br>
-            loadingIndicator.classList.add('hidden');
-            infoModal.classList.add('open');
-        }
-
-        function closeInfoModal() {
-            infoModal.classList.remove('open');
-            setTimeout(() => {
-                infoModalCategory.textContent = '';
-                infoModalTitle.textContent = '';
-                infoModalContent.textContent = '';
-            }, 300);
-        }
-
-        closeInfoModalButton.addEventListener('click', closeInfoModal);
-        window.addEventListener('click', (event) => {
-            if (event.target == infoModal) {
-                closeInfoModal();
-            }
-        });
-
-        document.querySelectorAll('.open-abstract-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const abstractCategory = event.target.dataset.abstractCategory;
-                const abstractTitle = event.target.dataset.abstractTitle;
-                const abstractContent = event.target.dataset.abstractContent;
-                openInfoModal(abstractCategory, abstractTitle, abstractContent);
-            });
-        });
-
-        // --- Skill Detail Modal Logic ---
-        const skillDetailModal = document.getElementById('skillDetailModal');
-        const skillModalCategory = document.getElementById('skillModalCategory');
-        const skillModalTitle = document.getElementById('skillModalTitle');
-        const skillModalDescription = document.getElementById('skillModalDescription');
-        const skillModalOrganizationsContainer = document.getElementById('skillModalOrganizations');
-        const skillModalOrganizationsList = document.getElementById('skillModalOrganizationsList');
-        const closeSkillModalButton = document.getElementById('closeSkillModal');
-
-        function openSkillModal(category, title, description) {
-            skillModalCategory.textContent = category;
-            skillModalTitle.textContent = title;
-            skillModalDescription.textContent = description;
-
-            skillModalOrganizationsList.innerHTML = '';
-            skillModalOrganizationsContainer.classList.add('hidden');
-
-            let organizations = [];
-            if (category === 'Organizational Skill' || category === 'Other Skill') {
-                switch (title) {
-                    case 'Scientific Writing':
-                    case 'Logistics Management':
-                        organizations.push('ARG/WEFC Nexus Lab');
-                        break;
-                    case 'Team Leadership':
-                        organizations.push('Structural Engineering Club');
-                        break; // Removed Total Barakah Housing Bangladesh Ltd.
-                    case 'Event Organizing':
-                        organizations.push('Structural Engineering Club');
-                        break;
-                    case 'Manpower Management':
-                        organizations.push('Structural Engineering Club');
-                        organizations.push('Total Barakah Housing Bangladesh Ltd.'); // Added Total Barakah Housing Bangladesh Ltd.
-                        break;
-                    case 'AI Practitioner':
-                        break;
-                }
-
-                if (organizations.length > 0) {
-                    organizations.forEach(org => {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = org;
-                        skillModalOrganizationsList.appendChild(listItem);
-                    });
-                    skillModalOrganizationsContainer.classList.remove('hidden'); // Ensure it's shown if there are organizations
-                } else {
-                    skillModalOrganizationsContainer.classList.add('hidden'); // Ensure it's hidden if no organizations
-                }
+            // Show selected Section safely
+            const activeSection = document.getElementById(tabId);
+            if (activeSection) {
+                activeSection.classList.remove('hidden');
+                void activeSection.offsetWidth; // Force reflow for animation
+                activeSection.classList.add('animate-fade-in');
             } else {
-                skillModalOrganizationsContainer.classList.add('hidden');
+                console.error(`Section with ID "${tabId}" not found.`);
             }
 
-            skillDetailModal.classList.add('open');
-        }
-
-        function closeSkillModal() {
-            skillDetailModal.classList.remove('open');
-            setTimeout(() => {
-                skillModalCategory.textContent = '';
-                skillModalTitle.textContent = '';
-                skillModalDescription.textContent = '';
-                skillModalOrganizationsList.innerHTML = '';
-                skillModalOrganizationsContainer.classList.add('hidden');
-            }, 300);
-        }
-
-        closeSkillModalButton.addEventListener('click', closeSkillModal);
-        window.addEventListener('click', (event) => {
-            if (event.target == skillDetailModal) {
-                closeSkillModal();
-            }
-        });
-
-        document.querySelectorAll('.skill-card').forEach(card => {
-            card.addEventListener('click', (event) => {
-                const skillTitle = card.dataset.skillTitle;
-                const skillDescription = card.dataset.skillDescription;
-                const skillCategory = card.dataset.skillCategory;
-                openSkillModal(skillCategory, skillTitle, skillDescription);
+            // Update Sidebar active state
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.remove('text-slate-700'); // Reset
             });
-        });
+            
+            const desktopNav = document.getElementById(`nav-${tabId}`);
+            if(desktopNav) desktopNav.classList.add('active');
 
-        // Scroll Progress Bar and Go to Top Button Logic
-        const scrollProgressBarContainer = document.getElementById('scroll-progress-container');
-        const scrollProgressBar = document.getElementById('scroll-progress-bar');
-        const goToTopButton = document.getElementById('go-to-top-button');
-
-        window.onscroll = function() {
-            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-            let scrolled = 0;
-
-            if (totalHeight > 0) {
-                scrolled = (window.scrollY / totalHeight) * 100;
-            }
-
-            scrolled = Math.min(100, Math.max(0, scrolled));
-
-            if (scrolled >= 95) {
-                scrollProgressBar.style.width = '100%';
-                scrollProgressBarContainer.style.display = 'none';
-                goToTopButton.style.display = 'block';
-            } else {
-                goToTopButton.style.display = 'none';
-                scrollProgressBarContainer.style.display = 'block';
-                scrollProgressBar.style.width = scrolled + '%';
-            }
-        };
-
-        goToTopButton.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // --- Snake-like Line Animation for Hero Section ---
-        let canvas, ctx, lines;
-        const NUM_LINES = 40; // Increased number of snake-like lines
-        const LINE_WIDTH = 2; // Thickness of the lines
-        const LINE_COLOR = 'rgba(0, 0, 0, 0.1)'; // Black with 10% opacity
-        const MAX_LENGTH = 50; // Max number of points in a snake line
-
-        // SnakeLine class to manage individual lines
-        class SnakeLine {
-            constructor(canvasWidth, canvasHeight) {
-                this.canvasWidth = canvasWidth;
-                this.canvasHeight = canvasHeight;
-                this.points = [];
-                this.maxLength = Math.floor(Math.random() * (MAX_LENGTH - 20) + 20); // Random length
-                this.speed = Math.random() * 1 + 1; // Random speed between 1 and 2
-                this.color = LINE_COLOR;
-                this.lineWidth = LINE_WIDTH;
-                this.init();
-            }
-
-            init() {
-                // Random starting position within canvas bounds
-                this.headX = Math.random() * this.canvasWidth;
-                this.headY = Math.random() * this.canvasHeight;
-
-                // Random initial velocity
-                this.vx = (Math.random() - 0.5) * 2 * this.speed;
-                this.vy = (Math.random() - 0.5) * 2 * this.speed;
-
-                // Ensure initial velocity is not too small
-                if (Math.abs(this.vx) < 0.5 && Math.abs(this.vy) < 0.5) {
-                    this.vx = this.speed;
-                    this.vy = this.speed;
-                }
-
-                this.points = [{ x: this.headX, y: this.headY }];
-                // Pre-populate with a few points to make it visible initially
-                for (let i = 0; i < this.maxLength / 2; i++) {
-                    this.points.unshift({ x: this.headX - this.vx * i, y: this.headY - this.vy * i });
-                }
-            }
-
-            update() {
-                // Update head position
-                this.headX += this.vx;
-                this.headY += this.vy;
-
-                // Add new head point
-                this.points.push({ x: this.headX, y: this.headY });
-
-                // Remove oldest point if line exceeds max length
-                if (this.points.length > this.maxLength) {
-                    this.points.shift();
-                }
-
-                // Boundary collision detection and reflection
-                const padding = 5; // Small padding to prevent lines from sticking to edges
-                if (this.headX < padding || this.headX > this.canvasWidth - padding) {
-                    this.vx *= -1; // Reverse X velocity
-                    this.headX = Math.max(padding, Math.min(this.headX, this.canvasWidth - padding)); // Keep within bounds
-                    // Add a slight random perturbation to avoid predictable bounces
-                    this.vy += (Math.random() - 0.5) * 0.5;
-                }
-                if (this.headY < padding || this.headY > this.canvasHeight - padding) {
-                    this.vy *= -1; // Reverse Y velocity
-                    this.headY = Math.max(padding, Math.min(this.headY, this.canvasHeight - padding)); // Keep within bounds
-                    // Add a slight random perturbation
-                    this.vx += (Math.random() - 0.5) * 0.5;
-                }
-            }
-
-            draw(ctx) {
-                ctx.strokeStyle = this.color;
-                ctx.lineWidth = this.lineWidth;
-                ctx.lineCap = 'round'; // Make line ends rounded
-
-                if (this.points.length < 2) return; // Need at least two points to draw a line
-
-                ctx.beginPath();
-                ctx.moveTo(this.points[0].x, this.points[0].y);
-                for (let i = 1; i < this.points.length; i++) {
-                    ctx.lineTo(this.points[i].x, this.points[i].y);
-                }
-                ctx.stroke();
-            }
-        }
-
-        function initSnakeCanvas() {
-            canvas = document.getElementById('snakeCanvas');
-            const heroSection = document.getElementById('hero');
-            if (!canvas || !heroSection) {
-                console.error("Canvas or hero section not found.");
-                return;
-            }
-
-            // Set canvas dimensions to match hero section
-            canvas.width = heroSection.offsetWidth;
-            canvas.height = heroSection.offsetHeight;
-            ctx = canvas.getContext('2d');
-
-            lines = [];
-            for (let i = 0; i < NUM_LINES; i++) {
-                lines.push(new SnakeLine(canvas.width, canvas.height));
-            }
-        }
-
-        function animateSnakeLines() {
-            if (!ctx || !canvas) return;
-
-            // Clear canvas for next frame
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Update and draw each line
-            lines.forEach(line => {
-                line.update();
-                line.draw(ctx);
+            // Update Mobile Nav active state
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.classList.remove('text-blue-600');
+                item.classList.add('text-slate-500');
             });
+            const mobileNav = document.getElementById(`mob-${tabId}`);
+            if(mobileNav) {
+                mobileNav.classList.remove('text-slate-500');
+                mobileNav.classList.add('text-blue-600');
+            }
 
-            requestAnimationFrame(animateSnakeLines);
+            // Scroll to top
+            const container = document.getElementById('content-container');
+            if(container) container.scrollTo(0,0);
         }
 
-        // Initialize and start animation when window loads
-        window.onload = function() {
-            initSnakeCanvas();
-            animateSnakeLines();
-        };
+        /* -----------------------------------------------------------
+           CANVAS BACKGROUND
+           ----------------------------------------------------------- */
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
 
-        // Handle canvas resizing on window resize
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
         window.addEventListener('resize', () => {
-            // Re-initialize canvas and lines to adapt to new size
-            initSnakeCanvas();
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+
+        const mouse = { x: null, y: null, radius: 150 }
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+                
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                if (distance < mouse.radius + this.size) {
+                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
+                        this.x += 2;
+                    }
+                    if (mouse.x > this.x && this.x > this.size * 10) {
+                        this.x -= 2;
+                    }
+                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
+                        this.y += 2;
+                    }
+                    if (mouse.y > this.y && this.y > this.size * 10) {
+                        this.y -= 2;
+                    }
+                }
+
+                this.x += this.directionX;
+                this.y += this.directionY;
+                
+                // Draw
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 12000; // Slightly less dense
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 0.4) - 0.2; // Slow speed
+                let directionY = (Math.random() * 0.4) - 0.2;
+                // Dark Blue particles for light background
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, '#1e40af'));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+
+        // Connect particles with lines if close enough
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
+                        + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    
+                    if (distance < (canvas.width/7) * (canvas.height/7)) {
+                        opacityValue = 1 - (distance/20000);
+                        // Dark Blue Lines
+                        ctx.strokeStyle = 'rgba(37, 99, 235,' + opacityValue * 0.2 + ')'; // Blue with low opacity
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Start Animation
+        init();
+        animate();
+        
+        // Fix for mouse leaving window
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        })
+
+
+        /* -----------------------------------------------------------
+           UI LOGIC (Modals, Clock, Scroll)
+           ----------------------------------------------------------- */
+        
+        // Unified Data for Modals (Research + Skills + Experience + Education + Affiliation)
+        const contentData = {
+            // Affiliation Items
+            'affl-ieb': {
+                title: "The Institution of Engineers, Bangladesh (IEB)",
+                body: "Associate Member",
+                meta: "Member from 2024"
+            },
+            'affl-asce': {
+                title: "American Society of Civil Engineers (ASCE)",
+                body: "Student Member",
+                meta: "Member from 2022"
+            },
+            'affl-aaees': {
+                title: "American Academy of Environmental Engineers & Scientists (AAEES)",
+                body: "Student Member",
+                meta: "Member from 2022"
+            },
+            'affl-aci': {
+                title: "American Concrete Institute (ACI)",
+                body: "Student Member",
+                meta: "Member from 2022"
+            },
+
+            // Education Items
+            'edu-bsc': {
+                title: "B.Sc. in Civil Engineering",
+                // UPDATED: Left-aligned, standard case
+                body: `<h4 class="font-bold text-slate-700 mb-3 tracking-wide">Notable Achievements</h4>
+                       <ul class="space-y-2 list-disc list-inside text-slate-600">
+                           <li>Vice Chancellor’s List Awardee</li>
+                           <li>Dean’s List Awardee</li>
+                           <li>President, Structural Engineering Club</li>
+                       </ul>`,
+                // Added University name here with the year
+                meta: "University of Asia Pacific | 2019 - 2024"
+            },
+            'edu-hsc': {
+                title: "Higher Secondary Certificate",
+                body: "Completed Higher Secondary Certificate with a focus on Science curriculum.",
+                meta: "Government Science College | 2017 - 2019"
+            },
+            'edu-ssc': {
+                title: "Secondary School Certificate",
+                body: "Completed Secondary School Certificate with a focus on Science curriculum.",
+                meta: "Bright School and College | 2015 - 2017"
+            },
+            // Test Score Items
+            'test-ielts': {
+                title: "IELTS Score Breakdown",
+                body: `<div class="grid grid-cols-2 gap-4 mt-2">
+                           <div class="p-3 bg-slate-50 rounded border border-slate-200 text-center">
+                               <p class="text-xs text-slate-500 uppercase">Listening</p>
+                               <p class="text-xl font-bold text-slate-800">8.5</p>
+                           </div>
+                           <div class="p-3 bg-slate-50 rounded border border-slate-200 text-center">
+                               <p class="text-xs text-slate-500 uppercase">Reading</p>
+                               <p class="text-xl font-bold text-slate-800">7.5</p>
+                           </div>
+                           <div class="p-3 bg-slate-50 rounded border border-slate-200 text-center">
+                               <p class="text-xs text-slate-500 uppercase">Writing</p>
+                               <p class="text-xl font-bold text-slate-800">7.0</p>
+                           </div>
+                           <div class="p-3 bg-slate-50 rounded border border-slate-200 text-center">
+                               <p class="text-xs text-slate-500 uppercase">Speaking</p>
+                               <p class="text-xl font-bold text-slate-800">6.0</p>
+                           </div>
+                       </div>`,
+                meta: "Overall Band Score: 7.5"
+            },
+
+            // Research Items
+            'research-5': {
+                title: "Assessment of Risk from The Outfall Discharges into Turag River and The Effects on Its Aquatic Ecosystems",
+                body: `<div class="text-slate-700">
+                        <p class="font-semibold text-lg mb-4">Sahariar Kabir Nion<sup>1</sup>, Ramjan Ali<sup>1</sup>, Habibullah Khan<sup>1</sup>, Nehreen Majed<sup>2</sup></p>
+                        <ol class="list-decimal list-outside ml-5 text-sm text-slate-600 space-y-1">
+                            <li>University of Asia Pacific, 74/A, Green Road, Dhaka, Bangladesh</li>
+                            <li>North South University, Block B, Bashundhara, Dhaka, Bangladesh</li>
+                        </ol>
+                       </div>`,
+                meta: "Research Article"
+            },
+            'research-4': {
+                title: "Microplastics & Nanoplastics and Human Health: Pathways from Environmental Exposure to Cardiovascular Risk",
+                body: `<div class="text-slate-700">
+                        <p class="font-semibold text-lg mb-4">Nabhan Haque<sup>1</sup>, Md. Sahariar Kabir Nion<sup>2</sup>, Hossain Azam<sup>2</sup>, Bethany Pruett<sup>1</sup>, Cheryl Campo<sup>1</sup></p>
+                        <ol class="list-decimal list-outside ml-5 text-sm text-slate-600 space-y-1">
+                            <li>Howard Community College</li>
+                            <li>University of the District of Columbia</li>
+                        </ol>
+                       </div>`,
+                meta: "Review Article"
+            },
+            'research-1': {
+                title: "Surveillance of SARS-CoV-2 during Pandemic through Wastewater-Based Epidemiology",
+                body: `<div class="text-slate-700">
+                        <p class="font-semibold text-lg mb-4">Azam, H.<sup>1</sup>, Nion, S.K.<sup>2</sup></p>
+                        <ol class="list-decimal list-outside ml-5 text-sm text-slate-600 space-y-1">
+                            <li>Associate Professor, Civil Engineering, School of Engineering and Applied Sciences, University of the District of Columbia, Washington, DC, USA</li>
+                            <li>Research Assistant/Civil Engineer</li>
+                        </ol>
+                       </div>`,
+                meta: "Mini Review"
+            },
+            'research-2': {
+                title: "Risk Assessment of Outfall Discharges into Turag River and Effect on Its Aquatic Ecosystems",
+                body: `<div class="text-slate-700">
+                        <p class="font-semibold text-lg mb-4">Nion, S.K.<sup>1</sup>, Khan, H.<sup>1</sup></p>
+                        <ol class="list-decimal list-outside ml-5 text-sm text-slate-600 space-y-1">
+                            <li>Department of Civil Engineering, University of Asia Pacific, Dhaka, Bangladesh</li>
+                        </ol>
+                       </div>`,
+                meta: "Undergraduate Thesis"
+            },
+            'research-3': {
+                title: "Current Status of Environmental Pollutants in Water and Food with Their Associated Risks in Urban Areas of Bangladesh: A Review-Based Study and Way Forward",
+                body: `<div class="text-slate-700">
+                        <p class="font-semibold text-lg mb-4">Azam, H.<sup>1</sup>, Nion, S.K.<sup>2</sup></p>
+                        <ol class="list-decimal list-outside ml-5 text-sm text-slate-600 space-y-1">
+                            <li>Assoc. Professor of Environmental Eng., University of the District of Columbia, Washington, DC, USA</li>
+                            <li>Research Assistant/Civil Engineer, Dhaka, Bangladesh</li>
+                        </ol>
+                       </div>`,
+                meta: "Mini Review"
+            },
+
+            // Acknowledgement Items
+            'ack-1': {
+                title: "Interim Update to PFAS in the Water and Wastewater Sectors",
+                body: `<div class="text-slate-700">
+                        <p class="font-semibold text-lg mb-4">Ryan A. Kirkland<sup>1</sup>, Erik D. White<sup>2</sup>, Hossain M. Azam<sup>3</sup></p>
+                        <ol class="list-decimal list-outside ml-5 text-sm text-slate-600 space-y-1">
+                            <li>Burns & McDonnell</li>
+                            <li>UEG Consulting</li>
+                            <li>University of the District of Columbia</li>
+                        </ol>
+                       </div>`,
+                meta: "Acknowledgement"
+            },
+
+            // Workshop Items
+            'workshop-1': {
+                title: "Current Progress and Innovation in Environmental Microbiology: Global Advances and Applications for Bangladesh",
+                body: `<p class="text-slate-600 mb-2"><strong>Role:</strong> Co-presenter</p>
+                       <p class="text-slate-600 mb-2"><strong>Event:</strong> ISBM International E-Conference 2025</p>
+                       <p class="text-slate-600"><strong>Organizer:</strong> International Society of Bangladesh-affiliated Microbiologists (ISBM)</p>`,
+                meta: "September 2025"
+            },
+            'workshop-2': {
+                title: "Commitments on Sustainable Waste Management in National Climate Plans",
+                body: `<p class="text-slate-600 mb-2"><strong>Role:</strong> Co-presenter</p>
+                       <p class="text-slate-600 mb-2"><strong>Event:</strong> The Readiness of Sustainable Waste Management and Commitments on Sustainable Waste Management in National Climate Change Plans</p>
+                       <p class="text-slate-600"><strong>Organizer:</strong> Department of Environment, Ministry of Environment, Forest, and Climate Change, Bangladesh</p>`,
+                meta: "July 2025"
+            },
+            'workshop-3': {
+                title: "Workshop on Preliminary Selection of Seismic Contest Participants by FEA Software",
+                body: `<p class="text-slate-600 mb-2"><strong>Role:</strong> Instructor</p>
+                       <p class="text-slate-600"><strong>Organizer:</strong> Structural Engineering Club, University of Asia Pacific, Dhaka, Bangladesh</p>`,
+                meta: "March 2024"
+            },
+
+            // Skill Items - Engineering
+            'skill-autocad': {
+                title: "AutoCAD",
+                body: "Expert in creating precise 2D designs for engineering projects, including drafting, architectural layouts, and civil infrastructure plans.",
+                meta: "Proficiency: Expert"
+            },
+            'skill-etabs': {
+                title: "ETABS",
+                body: "Skilled in structural analysis and design of buildings according to BNBC 2020, including modeling complex structures and seismic design considerations.",
+                meta: "Proficiency: Intermediate"
+            },
+            'skill-struct': {
+                title: "Structural Analysis",
+                body: "Competent in analyzing structural integrity, load distributions, and safety factors for complex civil engineering projects.",
+                meta: "Proficiency: Advanced"
+            },
+            'skill-wordpress': {
+                title: "WordPress",
+                body: "Experienced in building and maintaining dynamic websites using WordPress CMS. Skilled in theme customization, plugin management, and optimizing site performance for better user experience.",
+                meta: "Proficiency: Advanced"
+            },
+            // Skill Items - Analysis
+            'skill-arcgis': {
+                title: "ArcGIS Pro",
+                body: "Proficient in geospatial analysis, mapping, and data management using ArcGIS Pro, including spatial data visualization and creating interactive maps.",
+                meta: "Proficiency: Proficient"
+            },
+            'skill-origin': {
+                title: "OriginPro",
+                body: "Adept at data analysis, graphing, and scientific plotting with OriginPro, capable of generating high-quality visualizations for research data.",
+                meta: "Proficiency: Advanced"
+            },
+            'skill-writing': {
+                title: "Scientific Writing",
+                body: "Proficient in crafting clear, concise, and impactful scientific reports, research papers, and technical documentation adhering to academic standards.",
+                meta: "Proficiency: Advanced"
+            },
+            // Skill Items - Leadership
+            'skill-logistics': {
+                title: "Logistics Management",
+                body: "Assisting with various project-related tasks, including grant applications, email/folder organization, and communication with teams to conduct successful meetings.",
+                meta: "" 
+            },
+            'skill-team': {
+                title: "Team Leadership",
+                body: "Experienced in leading and motivating teams, fostering collaboration, and guiding members towards achieving common goals through effective communication and delegation.",
+                meta: ""
+            },
+            'skill-event': {
+                title: "Event Organizing",
+                body: "Capable of planning, coordinating, and executing successful events from conception to completion, including budget management, vendor negotiation, and on-site logistics.",
+                meta: ""
+            },
+            // Experience Items
+            'exp-fellow': {
+                title: "Fellow",
+                body: "Contributing to different BEN activities, focusing on environmental advocacy, networking, and sustainable development initiatives.",
+                meta: "Bangladesh Environment Network-BEN | Oct 2025 - Present"
+            },
+            'exp-ra': {
+                title: "Research Assistant",
+                body: "Leading data collection and analysis for environmental nexus projects. Coordinating between field teams and lab personnel to ensure accurate sampling and reporting on wastewater epidemiology.",
+                meta: "ARG/WEFC Nexus Lab | May 2025 - Present"
+            },
+            'exp-intern': {
+                title: "Intern Engineer",
+                body: "Site supervision, structural drawing verification, and manpower management for high-rise residential construction. Assisted in cost estimation and material quality control.",
+                meta: "Total Barakah Housing Bangladesh Ltd. | Jul 2024 - Aug 2024"
+            }
+        };
+
+        function openModal(id) {
+            const modal = document.getElementById('infoModal');
+            const content = document.getElementById('modalContent');
+            const modalMeta = document.getElementById('modalMeta'); // Get the meta div
+            const data = contentData[id]; 
+            
+            if(data) {
+                document.getElementById('modalTitle').innerText = data.title;
+                // Changed to innerHTML to support lists/formatting in body
+                document.getElementById('modalBody').innerHTML = data.body;
+                
+                // Logic to show/hide meta section based on content
+                if (data.meta && data.meta.trim() !== "") {
+                    modalMeta.innerText = data.meta;
+                    modalMeta.classList.remove('hidden');
+                } else {
+                    modalMeta.classList.add('hidden');
+                }
+
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95');
+                    content.classList.add('scale-100');
+                }, 10);
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('infoModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('infoModal')) closeModal();
+        }
+
+        // Clock Logic
+        function updateClock() {
+            const now = new Date();
+            const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            
+            document.getElementById('clock-time').innerText = now.toLocaleTimeString('en-US', { hour12: false });
+            document.getElementById('clock-date').innerText = now.toLocaleDateString('en-US', optionsDate);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Geolocation Logic Removed
+
+        // Scroll Progress Bar
+        window.onscroll = function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            const nav = document.getElementById('navbar');
+            if(winScroll > 50) {
+                nav.classList.add('shadow-lg');
+            } else {
+                nav.classList.remove('shadow-lg');
+            }
+        };
+
+        // Mailto Logic
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            window.location.href = `mailto:sknion7@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent("From: " + name + "\n\n" + message)}`;
+            this.reset();
         });
     </script>
 </body>
